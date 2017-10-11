@@ -22,4 +22,3 @@ deploy:
   service: gamebook-ivo
   slot: Production
   deployment_label: Gamebook-ivo
-  artifact: Gamebook.cspkg
