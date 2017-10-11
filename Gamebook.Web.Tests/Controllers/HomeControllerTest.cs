@@ -6,49 +6,54 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gamebook.Web;
 using Gamebook.Web.Controllers;
+using Gamebook.Services.Contracts;
+using Moq;
 
 namespace Gamebook.Web.Tests.Controllers
 {
-    //[TestClass]
-    //public class HomeControllerTest
-    //{
-    //    [TestMethod]
-    //    public void Index()
-    //    {
-    //        // Arrange
-    //        HomeController controller = new HomeController();
+    [TestClass]
+    public class HomeControllerTest
+    {
+        private Mock<IBooksService> bookServiceMock = new Mock<IBooksService>();
+        private Mock<IPagesService> pagesServiceMock = new Mock<IPagesService>();
 
-    //        // Act
-    //        ViewResult result = controller.Index() as ViewResult;
+        [TestMethod]
+        public void Index()
+        {
+            // Arrange
+            HomeController controller = new HomeController(bookServiceMock.Object, pagesServiceMock.Object);
 
-    //        // Assert
-    //        Assert.IsNotNull(result);
-    //    }
+            // Act
+            ViewResult result = controller.Index() as ViewResult;
 
-    //    [TestMethod]
-    //    public void About()
-    //    {
-    //        // Arrange
-    //        HomeController controller = new HomeController();
+            // Assert
+            Assert.IsNotNull(result);
+        }
 
-    //        // Act
-    //        ViewResult result = controller.About() as ViewResult;
+        [TestMethod]
+        public void About()
+        {
+            // Arrange
+            HomeController controller = new HomeController(bookServiceMock.Object, pagesServiceMock.Object);
 
-    //        // Assert
-    //        Assert.AreEqual("Your application description page.", result.ViewBag.Message);
-    //    }
+            // Act
+            ViewResult result = controller.About() as ViewResult;
 
-    //    [TestMethod]
-    //    public void Contact()
-    //    {
-    //        // Arrange
-    //        HomeController controller = new HomeController();
+            // Assert
+            Assert.AreEqual("Your application description page.", result.ViewBag.Message);
+        }
 
-    //        // Act
-    //        ViewResult result = controller.Contact() as ViewResult;
+        [TestMethod]
+        public void Contact()
+        {
+            // Arrange
+            HomeController controller = new HomeController(bookServiceMock.Object, pagesServiceMock.Object);
 
-    //        // Assert
-    //        Assert.IsNotNull(result);
-    //    }
-    //}
+            // Act
+            ViewResult result = controller.Contact() as ViewResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+    }
 }
