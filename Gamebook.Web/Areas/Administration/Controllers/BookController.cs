@@ -64,7 +64,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Edit(BookFullViewModel model, string returnUrl)
+        public ActionResult Edit(BookFullViewModel model, string returnUrl)
         {
             //if (!ModelState.IsValid)
             //{
@@ -92,7 +92,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 book.DeletedOn = null;
             }
 
-            var result = await this.booksService.Update(book);
+            var result = this.booksService.Update(book);
             return this.RedirectToAction("Result", "Home", new { result = result });
         }
 
