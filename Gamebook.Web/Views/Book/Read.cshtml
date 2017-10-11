@@ -1,0 +1,31 @@
+﻿@using Gamebook.Web.Models.Page
+@model PageDetailedViewModel
+
+@{
+    ViewBag.Title = "Page read details";
+}
+
+<h2>Page read details</h2>
+
+<div class="edit-field">
+    <h1 class="page-number">@Model.Number</h1>
+    <p class="page-text">@Model.Text</p>
+    <div class="edit-field">
+        @foreach (var childPage in Model.ChildPages)
+        {
+            <div class="col-md-12">
+                @using (Html.BeginForm("Read", "Book", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <section id="bookSearch">
+                        <input type="hidden" name="book" value=@Model.BookCatalogueNumber>
+                        <input type="hidden" name="page" value=@(childPage.ChildPageNumber)>
+                        <div class="edit-field">
+                            @Html.Partial("_PageConnectionPartial", childPage)
+                            <input type="submit" value="@(childPage.ChildPageNumber)" />
+                        </div>
+                    </section>
+                }
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,12 @@
+﻿@using Gamebook.Web.Areas.Administration.Models
+@model ResultViewModel
+
+@if (Model.Result > 0)
+{
+    <h1>Operation successful! Number of database entries modified: @Model.Result</h1>
+}
+else
+{
+    <h1>Operation unsuccessful!</h1>
+}
+

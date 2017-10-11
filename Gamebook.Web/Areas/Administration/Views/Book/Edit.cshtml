@@ -1,0 +1,56 @@
+﻿@using Gamebook.Web.Areas.Administration.Models
+@model BookFullViewModel
+
+@using (Html.BeginForm("Edit", "Book", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="edit-field">
+        <div>BookId: </div>
+        <div>@Model.Id</div>
+        <input type="hidden" name="Id" value=@Model.Id />
+    </div>
+    <div class="edit-field">
+        <div>Catalogue number: </div>
+        <div>@Html.EditorFor(m => m.CatalogueNumber)</div>
+    </div>
+    <div class="edit-field">
+        <div>Title: </div>
+        <div>@Html.EditorFor(m => m.Title)</div>
+    </div>
+    <div class="edit-field">
+        <div>Resume: </div>
+        <div>@Html.EditorFor(m => m.Resume)</div>
+    </div>
+    <div class="edit-field">
+        <div>isDeleted: </div>
+        <div>@Html.EditorFor(m => m.isDeleted)</div>
+    </div>
+    <div class="edit-field">
+        <div>Deleted on: </div>
+        <div>@Model.DeletedOn</div>
+        <input type="hidden" name="DeletedOn" value=@Model.DeletedOn />
+    </div>
+    <div class="edit-field">
+        <div>Created on: </div>
+        <div>@Model.CreatedOn</div>
+        <input type="hidden" name="CreatedOn" value=@Model.CreatedOn />
+    </div>
+    <div class="edit-field">
+        <div>Modified on: </div>
+        <div>@Model.ModifiedOn</div>
+        <input type="hidden" name="ModifiedOn" value=@Model.ModifiedOn />
+    </div>
+    <div class="edit-field">
+        <div>Author username: </div>
+        <div>@Model.AuthorUsername</div>
+        <input type="hidden" name="AuthoUsername" value=@Model.AuthorUsername />
+    </div>
+    <div class="edit-field">
+        <div>Author Id: </div>
+        <div>@Model.AuthorId</div>
+        <input type="hidden" name="AuthorId" value=@Model.AuthorId />
+    </div>
+    
+    <input type="submit" value="Edit" class="btn btn-default" />
+}

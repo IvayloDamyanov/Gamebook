@@ -1,0 +1,25 @@
+﻿@using Gamebook.Web.Models.Book;
+@model BookDetailedViewModel
+
+@{
+    ViewBag.Title = "Book details";
+}
+
+<div class="row">
+    @Html.Partial("_BookDetailedPartial", Model)
+
+    <div class="container">
+        <div class="row">
+            <div class="input-group col-xs-12">
+                @using (Html.BeginForm("Read", "Book", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+                {
+                    <section id="bookSearch">
+                        <input type="hidden" name="book" value=@Model.CatalogueNumber>
+                        <input type="hidden" name="page" value=1>
+                        <button class="btn btn-danger" type="submit">Start reading</button>
+                    </section>
+                }
+            </div>
+        </div>
+    </div>
+</div>

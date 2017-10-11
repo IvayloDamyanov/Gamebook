@@ -1,0 +1,13 @@
+﻿@using Gamebook.Web.Models.Book
+@model BookListViewModel
+
+<div class="col-md-12">
+    <a href=@("detailed/" + Model.CatalogueNumber) class=".book-list-single">
+        <div>
+            Title: @Model.Title
+            <br />
+            Catalogue number: @Model.CatalogueNumber
+        </div>
+    </a>
+    <hr />
+</div>

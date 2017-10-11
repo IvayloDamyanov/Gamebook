@@ -1,0 +1,16 @@
+﻿@using Gamebook.Web.Models.Book
+@model ListViewModel
+
+@{
+    ViewBag.Title = "Books edit";
+}
+
+<h2>Book list</h2>
+
+<div class="row">
+    @using (Html.BeginForm("Edit", "Book", FormMethod.Post, null))
+    {
+        @Html.Partial("_BookEditPartial", Model.Books.First())
+        <button type="submit">Submit!</button>
+    }
+</div>

@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Book Index";
+}
+<div class="container">
+    <div class="row">
+        <h2>Search for books by name or catalogue number</h2>
+        <div class="input-group col-xs-12">
+            @using (Html.BeginForm("List", "Book", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+            {
+                <section id="bookSearch">
+                    <input type="text" class="search-query form-control" name = "searchTerm" placeholder="Leave empty for all" />
+                    <button class="btn btn-danger" type="submit">Search</button>
+                </section>
+            }
+        </div>
+    </div>
+</div>

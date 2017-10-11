@@ -1,0 +1,16 @@
+﻿@using Gamebook.Web.Models.Book
+@model ListViewModel
+
+@{
+    ViewBag.Title = "Books list";
+}
+
+<h2>Book list</h2>
+
+<div class="row">
+    @foreach(var book in Model.Books)
+    {
+        @Html.Partial("_BookListPartial", book)
+    }
+</div>
+
