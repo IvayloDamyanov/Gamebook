@@ -53,7 +53,7 @@ namespace Gamebook.Services
                 .First();
         }
 
-        public async Task<int> Update(Book book)
+        public int Update(Book book)
         {
             this.booksRepo.Update(book);
             return this.context.Commit();
