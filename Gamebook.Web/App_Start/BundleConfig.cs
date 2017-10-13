@@ -33,6 +33,9 @@ namespace Gamebook.Web
 
             bundles.Add(new StyleBundle("~/Content/datatables").Include(
                       "~/Content/DataTables/css/dataTables.bootstrap.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/custom").Include(
+                        "~/Scripts/Custom/adminBookTable.js"));
         }
     }
 }
