@@ -230,8 +230,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
+    <Compile Include="Areas\Administration\Controllers\PageController.cs" />
     <Compile Include="Areas\Administration\Controllers\BookController.cs" />
     <Compile Include="Areas\Administration\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Administration\Models\PageCreateViewModel.cs" />
+    <Compile Include="Areas\Administration\Models\BookCreateViewModel.cs" />
+    <Compile Include="Areas\Administration\Models\PageFullViewModel.cs" />
     <Compile Include="Areas\Administration\Models\BookFullViewModel.cs" />
     <Compile Include="Areas\Administration\Models\ResultViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -259,6 +263,8 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Scripts\Custom\adminPageTable.js" />
+    <Content Include="Scripts\Custom\adminUserTable.js" />
     <Content Include="Scripts\Custom\adminBookTable.js" />
     <Content Include="Content\DataTables\css\autoFill.bootstrap.css" />
     <Content Include="Content\DataTables\css\autoFill.bootstrap.min.css" />
@@ -431,7 +437,11 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
-    <Content Include="Areas\Administration\Views\Book\BooksList.cshtml" />
+    <Content Include="Areas\Administration\Views\Book\List.cshtml" />
+    <Content Include="Areas\Administration\Views\Shared\_CreateBookPartial.cshtml" />
+    <Content Include="Areas\Administration\Views\Page\List.cshtml" />
+    <Content Include="Areas\Administration\Views\Page\Edit.cshtml" />
+    <Content Include="Areas\Administration\Views\Shared\_CreatePagePartial.cshtml" />
     <None Include="Properties\PublishProfiles\GamebookWeb20171011093612 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
@@ -513,6 +523,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -574,7 +586,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Views\Default\" />
-    <Folder Include="Areas\Administration\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

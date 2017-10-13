@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Gamebook.Data.Model;
+using System.Threading.Tasks;
 
 namespace Gamebook.Services.Contracts
 {
@@ -7,6 +8,8 @@ namespace Gamebook.Services.Contracts
     {
         IQueryable<Page> GetAll();
         Page Find(int bookCatalogueNumber, int searchedPageNum);
-        void Update(Page page);
+        Task<int> Add(Page page);
+        Task<int> Delete(Page page);
+        Task<int> Update(Page page);
     }
 }

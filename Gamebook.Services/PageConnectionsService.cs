@@ -38,5 +38,23 @@ namespace Gamebook.Services
                     pageConnection.Book.Id == searchedBook.Id
                     && pageConnection.ParentPageNumber == parentPageNumber);
         }
+
+        public Task<int> Add(PageConnection pageConnection)
+        {
+            this.pageConnectionsRepo.Add(pageConnection);
+            return this.context.CommitAsync();
+        }
+
+        public Task<int> Delete(PageConnection pageConnection)
+        {
+            this.pageConnectionsRepo.Delete(pageConnection);
+            return this.context.CommitAsync();
+        }
+
+        public Task<int> Update(PageConnection pageConnection)
+        {
+            this.pageConnectionsRepo.Update(pageConnection);
+            return this.context.CommitAsync();
+        }
     }
 }

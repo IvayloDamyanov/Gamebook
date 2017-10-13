@@ -11,9 +11,14 @@ namespace Gamebook.Web
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jqueryunobtrusive").Include(
+                       "~/Scripts/jquery.unobtrusive-ajax.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
+            //bundles.Add(new ScriptBundle("~/bundles/jqueryunobtrusiveval").Include(
+            //           "~/Scripts/jquery.validate.unobtrusive.js"));
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
@@ -34,8 +39,14 @@ namespace Gamebook.Web
             bundles.Add(new StyleBundle("~/Content/datatables").Include(
                       "~/Content/DataTables/css/dataTables.bootstrap.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/custom").Include(
+            bundles.Add(new ScriptBundle("~/bundles/custom/adminBookTable").Include(
                         "~/Scripts/Custom/adminBookTable.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/custom/adminPageTable").Include(
+                        "~/Scripts/Custom/adminPageTable.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/custom/adminUserTable").Include(
+                        "~/Scripts/Custom/adminUserTable.js"));
         }
     }
 }

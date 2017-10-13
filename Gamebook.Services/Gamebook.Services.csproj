@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,9 +47,11 @@
     <Compile Include="Contracts\IService.cs" />
     <Compile Include="Contracts\IPagesService.cs" />
     <Compile Include="Contracts\IPageConnectionsService.cs" />
+    <Compile Include="Contracts\IUsersService.cs" />
     <Compile Include="PageConnectionsService.cs" />
     <Compile Include="PagesService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UsersService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Gamebook.Data.Model\Gamebook.Data.Model.csproj">

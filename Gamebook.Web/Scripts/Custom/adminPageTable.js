@@ -1,17 +1,17 @@
-﻿var bookListVM;
+﻿var pageListVM;
 (function () {
-    bookListVM = {
+    pageListVM = {
         dt: null,
 
         init: function () {
-            dt = $('#books-data-table').DataTable({
+            dt = $('#pages-data-table').DataTable({
                 "serverSide": true,
                 "processing": true,
-                "ajax": { "url": "bookTable" },
+                "ajax": { "url": "pageTable" },
                 "columns": [
-                    { "title": "Title", "data": "Title", "searchable": true },
-                    { "title": "Resume", "data": "Resume", "searchable": true },
-                    { "title": "Cat. Num", "data": "CatalogueNumber", "searchable": true },
+                    { "title": "Book Cat Num", "data": "BookCatNum", "searchable": true },
+                    { "title": "Number", "data": "Number", "searchable": true },
+                    { "title": "Text", "data": "Text", "searchable": true },
                     { "title": "Created", "data": "CreatedOn", "searchable": true },
                     { "title": "Modified", "data": "ModifiedOn", "searchable": true },
                     { "title": "isDeleted", "data": "isDeleted", "searchable": true },
@@ -27,32 +27,32 @@
     }
 
     // initialize the datatables
-    bookListVM.init();
+    pageListVM.init();
 })();
 
-$("#btnCreateBook").on("click", function () {
+$("#btnCreatePage").on("click", function () {
 
     var url = $(this).data("url");
 
     $.get(url, function (data) {
-        $('#createBookContainer').html(data);
+        $('#createPageContainer').html(data);
 
-        $('#createBookModal').modal('show');
+        $('#createPageModal').modal('show');
     });
 
 });
 
-function CreateBookSuccess(data) {
+function CreatePageSuccess(data) {
     if (data != "success") {
-        $('#createBookContainer').html(data);
+        $('#createPageContainer').html(data);
         return;
     }
-    $('#createBookModal').modal('hide');
-    $('#createBookContainer').html("");
-    $('#createdBookContainer').html(data);
-    $('#createdBookContainer').show();
+    $('#createPageModal').modal('hide');
+    $('#createPageContainer').html("");
+    $('#createdPageContainer').html(data);
+    $('#createdPageContainer').show();
     setTimeout(function () {
-        $('#createdBookContainer').hide();
+        $('#createdPageContainer').hide();
     }, 5000);
-    bookListVM.refresh();
+    pageListVM.refresh();
 };

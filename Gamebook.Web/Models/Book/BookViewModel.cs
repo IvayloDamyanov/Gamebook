@@ -19,7 +19,7 @@ namespace Gamebook.Web.Models.Book
 
         public string Resume { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MMM/yyyy}")]
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }

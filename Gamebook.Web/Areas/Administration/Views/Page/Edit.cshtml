@@ -1,26 +1,26 @@
 ﻿@using Gamebook.Web.Areas.Administration.Models
-@model BookFullViewModel
+@model PageFullViewModel
 
-@using (Html.BeginForm("Edit", "Book", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Edit", "Page", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 
     @*<div class="edit-field">
-        <div>BookId: </div>
+        <div>PageId: </div>
         <div>@Model.Id</div>
         <input type="hidden" name="Id" value=@Model.Id />
     </div>*@
     <div class="edit-field">
-        <div>Catalogue number: </div>
-        <div>@Html.EditorFor(m => m.CatalogueNumber)</div>
+        <div>BookCatNum: </div>
+        <div>@Html.EditorFor(m => m.BookCatNum)</div>
     </div>
     <div class="edit-field">
-        <div>Title: </div>
-        <div>@Html.EditorFor(m => m.Title)</div>
+        <div>Number: </div>
+        <div>@Html.EditorFor(m => m.Number)</div>
     </div>
     <div class="edit-field">
-        <div>Resume: </div>
-        <div>@Html.EditorFor(m => m.Resume)</div>
+        <div>Text: </div>
+        <div>@Html.EditorFor(m => m.Text)</div>
     </div>
     <div class="edit-field">
         <div>isDeleted: </div>

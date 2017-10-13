@@ -20,11 +20,9 @@ namespace Gamebook.Data.Model
 
         [MaxLength(maxTextLength)]
         public string Text { get; set; }
-
-        [Required]
+        
         public virtual User Author { get; set; }
         
-        [Required]
         public virtual Book Book { get; set; }
     }
 }

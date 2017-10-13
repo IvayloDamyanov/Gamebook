@@ -18,14 +18,14 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 {
     [RouteArea("Administration")]
     [Authorize(Roles = "Admin")]
-    public class BookController : Controller
+    public class PageController : Controller
     {
         private readonly IBooksService booksService;
         private readonly IPagesService pagesService;
         private readonly IPageConnectionsService pageConnectionsService;
         private readonly IUsersService usersService;
 
-        public BookController(
+        public PageController(
                             IBooksService booksService,
                             IPagesService pagesService,
                             IPageConnectionsService pageConnectionsService,
@@ -37,7 +37,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             this.usersService = usersService;
         }
 
-        //// GET: \book - main page + search
+        //// GET: \page - main page + search
         //[HttpGet]
         //[Authorize]
         //public ViewResult Index()
@@ -47,22 +47,22 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Authorize]
-        public ViewResult Edit(int id)
+        public ViewResult Edit(int id, int bookNum)
         {
-            Book book = this.booksService.FindSingle(id);
+            Page page = this.pagesService.Find(bookNum, id);
 
-            BookFullViewModel viewModel = new BookFullViewModel()
+            PageFullViewModel viewModel = new PageFullViewModel()
             {
-                Id = book.Id,
-                CatalogueNumber = book.CatalogueNumber,
-                Title = book.Title,
-                Resume = book.Resume,
-                isDeleted = book.isDeleted,
-                DeletedOn = book.DeletedOn,
-                CreatedOn = book.CreatedOn,
-                ModifiedOn = book.ModifiedOn,
-                AuthorUsername = book.Author.UserName,
-                AuthorId = book.Author.Id
+                Id = page.Id,
+                BookCatNum = page.Book.CatalogueNumber,
+                Number = page.Number,
+                Text = page.Text,
+                isDeleted = page.isDeleted,
+                DeletedOn = page.DeletedOn,
+                CreatedOn = page.CreatedOn,
+                ModifiedOn = page.ModifiedOn,
+                AuthorUsername = page.Author.UserName,
+                AuthorId = page.Author.Id
             };
 
             return View(viewModel);
@@ -70,33 +70,32 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Edit(BookFullViewModel model, string returnUrl)
+        public async Task<ActionResult> Edit(PageFullViewModel model, string returnUrl)
         {
             //if (!ModelState.IsValid)
             //{
             //    return View(model);
             //}
 
-            Book book = this.booksService.FindSingle(model.CatalogueNumber);
-            book.Title = model.Title;
-            book.CatalogueNumber = model.CatalogueNumber;
-            book.Resume = model.Resume;
-            book.ModifiedOn = DateTime.Now;
+            Page page = this.pagesService.Find(model.BookCatNum, model.Number);
+            page.Text = model.Text;
+            page.Number = model.Number;
+            page.ModifiedOn = DateTime.Now;
 
             if (model.isDeleted && model.DeletedOn == null)
             {
-                book.isDeleted = true;
-                book.DeletedOn = DateTime.Now;
+                page.isDeleted = true;
+                page.DeletedOn = DateTime.Now;
             }
             if (!model.isDeleted && model.DeletedOn != null)
             {
-                book.isDeleted = false;
-                book.DeletedOn = null;
+                page.isDeleted = false;
+                page.DeletedOn = null;
             }
 
-            var result = this.booksService.Update(book);
+            var result = this.pagesService.Update(page);
             await result;
-            return this.RedirectToAction("List", "Book", new { result = result });
+            return this.RedirectToAction("List", "Page", new { result = result });
         }
 
         [Authorize]
@@ -110,21 +109,22 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         }
 
         [Authorize]
-        public ActionResult BookTable([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        public ActionResult PageTable([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
-            var query = booksService
+            var query = pagesService
                 .GetAll()
-                .Select(book => new BookFullViewModel()
+                .Select(page => new PageFullViewModel()
                 {
-                    Id = book.Id,
-                    CatalogueNumber = book.CatalogueNumber,
-                    Title = book.Title,
-                    Resume = book.Resume,
-                    isDeleted = book.isDeleted,
-                    DeletedOn = book.DeletedOn,
-                    CreatedOn = book.CreatedOn,
-                    ModifiedOn = book.ModifiedOn,
-                    AuthorUsername = book.Author.UserName
+                    Id = page.Id,
+                    BookCatNum = page.Book.CatalogueNumber,
+                    Number = page.Number,
+                    Text = page.Text,
+                    isDeleted = page.isDeleted,
+                    DeletedOn = page.DeletedOn,
+                    CreatedOn = page.CreatedOn,
+                    ModifiedOn = page.ModifiedOn,
+                    AuthorUsername = page.Author.UserName,
+                    AuthorId = page.Author.Id
                 })
                 .ToList();
 
@@ -134,9 +134,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             if (requestModel.Search.Value != string.Empty)
             {
                 var value = requestModel.Search.Value.Trim();
-                query = query.Where(book => book.Title.Contains(value)
-                                        || book.Resume.Contains(value)) 
-                                         .ToList();
+                query = query.Where(page => page.Text.Contains(value)).ToList();
             }
 
             var filteredCount = query.Count();
@@ -151,22 +149,24 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 orderByString += (column.Data) + (column.SortDirection == Column.OrderDirection.Ascendant ? " asc" : " desc");
             }
 
-            query = query.OrderBy(orderByString == string.Empty ? "CatalogueNumber asc" : orderByString).ToList();
+            query = query.OrderBy(orderByString == string.Empty ? "Number asc" : orderByString).ToList();
             
             // Paging
             query = query.Skip(requestModel.Start).Take(requestModel.Length).ToList();
 
-            var data = query.Select(book => new
+            var data = query.Select(page => new
             {
-                Id = book.Id,
-                Title = book.Title,
-                CatalogueNumber = "<a href=\"./edit/" + book.CatalogueNumber + "\">" + book.CatalogueNumber + "</a>",
-                Resume = book.Resume,
-                CreatedOn = string.Format("{0:dd/MMM/yyyy}", book.CreatedOn),
-                ModifiedOn = string.Format("{0:dd/MMM/yyyy}", book.ModifiedOn),
-                isDeleted = book.isDeleted,
-                DeletedOn = string.Format("{0:dd/MMM/yyyy}", book.DeletedOn),
-                AuthorUsername = book.AuthorUsername
+                Id = page.Id,
+                //page / edit ? id = 13 & bookNum = 1
+                Number = "<a href=\"./edit?id=" + page.Number + "&bookNum=" + page.BookCatNum + "\">" + page.Number + "</a>",
+                BookCatNum = page.BookCatNum,
+                Text = page.Text,
+                CreatedOn = string.Format("{0:dd/MMM/yyyy}", page.CreatedOn),
+                ModifiedOn = string.Format("{0:dd/MMM/yyyy}", page.ModifiedOn),
+                isDeleted = page.isDeleted,
+                DeletedOn = string.Format("{0:dd/MMM/yyyy}", page.DeletedOn),
+                AuthorUsername = page.AuthorUsername,
+                AuthorId = page.AuthorId
             }).ToList();
 
             return Json(
@@ -178,28 +178,28 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         [Authorize]
         public ActionResult Create()
         {
-            var model = new BookCreateViewModel();
-            return View("_CreateBookPartial", model);
+            var model = new PageCreateViewModel();
+            return View("_CreatePagePartial", model);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create(BookCreateViewModel bookVM)
+        public async Task<ActionResult> Create(PageCreateViewModel pageVM)
         {
             if (!ModelState.IsValid)
             {
-                return View("_CreateBookPartial", bookVM);
+                return View("_CreatePagePartial", pageVM);
             }
 
 
             User author = usersService.FindSingle(this.User.Identity.Name);
             
-            Book book = new Book()
+            Page page = new Page()
             {
                 Id = Guid.NewGuid(),
-                Title = bookVM.Title,
-                CatalogueNumber = bookVM.CatalogueNumber,
-                Resume = bookVM.Resume,
+                //Book.CatalogueNumber = pageVM.BookCatNum,
+                Number = pageVM.Number,
+                Text = pageVM.Text,
                 isDeleted = false,
                 DeletedOn = null,
                 CreatedOn = DateTime.Now,
@@ -209,13 +209,13 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
             try
             {
-                var task = this.booksService.Add(book);
+                var task = this.pagesService.Add(page);
                 await task;
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("", "Unable to add the Book");
-                return View("_CreateBookPartial", bookVM);
+                ModelState.AddModelError("", "Unable to add the Page");
+                return View("_CreatePagePartial", pageVM);
             }
 
             return Content("success");

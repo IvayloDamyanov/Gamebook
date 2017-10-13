@@ -9,7 +9,9 @@ namespace Gamebook.Services.Contracts
     {
         IQueryable<Book> GetAll();
         IQueryable<Book> FindAll(string query);
-        Book FindSingle(int id);
-        int Update(Book book);
+        Book FindSingle(int catalogueNumber);
+        Task<int> Add(Book book);
+        Task<int> Delete(Book book);
+        Task<int> Update(Book book);
     }
 }

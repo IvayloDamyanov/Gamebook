@@ -5,6 +5,7 @@ using Gamebook.Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Gamebook.Services
 {
@@ -46,10 +47,22 @@ namespace Gamebook.Services
             }
         }
 
-        public void Update(Page page)
+        public Task<int> Add(Page page)
+        {
+            this.pagesRepo.Add(page);
+            return this.context.CommitAsync();
+        }
+
+        public Task<int> Delete(Page page)
+        {
+            this.pagesRepo.Delete(page);
+            return this.context.CommitAsync();
+        }
+        
+        public Task<int> Update(Page page)
         {
             this.pagesRepo.Update(page);
-            this.context.Commit();
+            return this.context.CommitAsync();
         }
     }
 }

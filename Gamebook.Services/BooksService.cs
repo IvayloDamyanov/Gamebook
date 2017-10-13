@@ -53,10 +53,22 @@ namespace Gamebook.Services
                 .First();
         }
 
-        public int Update(Book book)
+        public Task<int> Add(Book book)
+        {
+            this.booksRepo.Add(book);
+            return this.context.CommitAsync();
+        }
+
+        public Task<int> Delete(Book book)
+        {
+            this.booksRepo.Delete(book);
+            return this.context.CommitAsync();
+        }
+
+        public Task<int> Update(Book book)
         {
             this.booksRepo.Update(book);
-            return this.context.Commit();
+            return this.context.CommitAsync();
         }
     }
 }

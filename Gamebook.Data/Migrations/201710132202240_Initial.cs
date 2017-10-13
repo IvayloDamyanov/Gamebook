@@ -88,12 +88,12 @@ namespace Gamebook.Data.Migrations
                         DeletedOn = c.DateTime(),
                         CreatedOn = c.DateTime(),
                         ModifiedOn = c.DateTime(),
-                        Author_Id = c.String(nullable: false, maxLength: 128),
-                        Book_Id = c.Guid(nullable: false),
+                        Author_Id = c.String(maxLength: 128),
+                        Book_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetUsers", t => t.Author_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Books", t => t.Book_Id, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.Author_Id)
+                .ForeignKey("dbo.Books", t => t.Book_Id)
                 .Index(t => t.isDeleted)
                 .Index(t => t.Author_Id)
                 .Index(t => t.Book_Id);
