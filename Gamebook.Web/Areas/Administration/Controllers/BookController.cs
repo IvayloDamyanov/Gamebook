@@ -1,4 +1,5 @@
-﻿using Gamebook.Data.Model;
+﻿using DataTables.Mvc;
+using Gamebook.Data.Model;
 using Gamebook.Services.Contracts;
 using Gamebook.Web.Areas.Administration.Models;
 using Gamebook.Web.Infrastructure;
@@ -10,6 +11,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Linq.Dynamic;
+using System.Text.RegularExpressions;
 
 namespace Gamebook.Web.Areas.Administration.Controllers
 {
@@ -96,58 +99,73 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             return this.RedirectToAction("Result", "Home", new { result = result });
         }
 
-        // GET: \book\list - search results
-        [HttpGet]
-        [Authorize]
-        public ViewResult List(string searchTerm)
+        public ActionResult BooksList()
         {
-            var books = this.booksService
-                .FindAll(searchTerm)
-                .Select(book => new BookListViewModel()
-                {
-                    CatalogueNumber = book.CatalogueNumber,
-                    Title = book.Title
-                })
-                .ToList();
-
-            //With Automapper (inject IMapper in constructor)
-            //var books = this.booksService
-            //    .Find(query)
-            //    .Select(x => this.mapper.Map<PostViewModel>(x))
-            //    .ToList();
-
-            var viewModel = new ListViewModel()
-            {
-                Books = books
-            };
-
-            return View(viewModel);
+            return View();
         }
 
-        [HttpGet]
-        [Authorize]
-        public ViewResult Read(int book, int page)
+        public ActionResult BookTable([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
-            Page targetPage = this.pagesService
-                .Find(book, page);
-            var childPages = this.pageConnectionsService
-                .getChildPages(book, page)
-                .Select(pageConnection => new PageConnectionViewModel()
+            var query = booksService
+                .GetAll()
+                .Select(book => new BookFullViewModel()
                 {
-                    Text = pageConnection.Text,
-                    ChildPageNumber = pageConnection.ChildPageNumber
+                    Id = book.Id,
+                    CatalogueNumber = book.CatalogueNumber,
+                    Title = book.Title,
+                    Resume = book.Resume,
+                    isDeleted = book.isDeleted,
+                    DeletedOn = book.DeletedOn,
+                    CreatedOn = book.CreatedOn,
+                    ModifiedOn = book.ModifiedOn,
+                    AuthorUsername = book.Author.UserName,
+                    AuthorId = book.Author.Id
                 })
                 .ToList();
 
-            PageDetailedViewModel viewModel = new PageDetailedViewModel()
+            var totalCount = query.Count();
+            
+            // Apply filters for searching
+            if (requestModel.Search.Value != string.Empty)
             {
-                BookCatalogueNumber = targetPage.Book.CatalogueNumber,
-                Number = targetPage.Number,
-                Text = targetPage.Text,
-                ChildPages = childPages
-            };
+                var value = requestModel.Search.Value.Trim();
+                query = query.Where(book => book.Title.Contains(value)
+                                        || book.Resume.Contains(value)) 
+                                         .ToList();
+            }
 
-            return View(viewModel);
+            var filteredCount = query.Count();
+
+            // Sorting
+            var sortedColumns = requestModel.Columns.GetSortedColumns();
+            var orderByString = String.Empty;
+
+            foreach (var column in sortedColumns)
+            {
+                orderByString += orderByString != String.Empty ? "," : "";
+                orderByString += (column.Data) + (column.SortDirection == Column.OrderDirection.Ascendant ? " asc" : " desc");
+            }
+
+            query = query.OrderBy(orderByString == string.Empty ? "CatalogueNumber asc" : orderByString).ToList();
+            
+            // Paging
+            query = query.Skip(requestModel.Start).Take(requestModel.Length).ToList();
+
+            var data = query.Select(book => new
+            {
+                Id = book.Id,
+                Title = book.Title,
+                CatalogueNumber = "<a href=\"./edit/" + book.CatalogueNumber + "\">" + book.CatalogueNumber + "</a>",
+                Resume = book.Resume,
+                CreatedOn = string.Format("{0:dd/MMM/yyyy}", book.CreatedOn),
+                ModifiedOn = string.Format("{0:dd/MMM/yyyy}", book.ModifiedOn),
+                isDeleted = book.isDeleted,
+                DeletedOn = string.Format("{0:dd/MMM/yyyy}", book.DeletedOn)
+            }).ToList();
+
+            return Json(
+                new DataTablesResponse(requestModel.Draw, data, filteredCount, totalCount), 
+                JsonRequestBehavior.AllowGet);
         }
     }
 }

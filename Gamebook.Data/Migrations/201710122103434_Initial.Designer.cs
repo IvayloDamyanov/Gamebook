@@ -13,7 +13,7 @@ namespace Gamebook.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201710102228572_Initial"; }
+            get { return "201710122103434_Initial"; }
         }
         
         string IMigrationMetadata.Source

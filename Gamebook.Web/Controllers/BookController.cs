@@ -55,7 +55,7 @@ namespace Gamebook.Web.Controllers
         // GET: \book\list - search results
         [HttpGet]
         [Authorize]
-        public ViewResult List(string searchTerm)
+        public ViewResult List(string searchTerm, int resultsPerPage = 5, int page = 1)
         {
             var books = this.booksService
                 .FindAll(searchTerm)
@@ -64,7 +64,14 @@ namespace Gamebook.Web.Controllers
                     CatalogueNumber = book.CatalogueNumber,
                     Title = book.Title
                 })
+                .OrderBy(x => x.CatalogueNumber)
                 .ToList();
+
+            page = page > 0 ? page : 1;
+
+            var outputBooks = Pagination(books, resultsPerPage, page);
+
+            int[] pagesNav = PagesNav(books.Count, resultsPerPage, page);
 
             //With Automapper (inject IMapper in constructor)
             //var books = this.booksService
@@ -74,10 +81,63 @@ namespace Gamebook.Web.Controllers
 
             var viewModel = new ListViewModel()
             {
-                Books = books
+                Pages = pagesNav,
+                CurrentPage = page,
+                ResultsPerPage = resultsPerPage,
+                SearchedTerm = searchTerm,
+                Books = outputBooks
             };
 
             return View(viewModel);
+        }
+
+        private int[] PagesNav(int booksCount, int resultsPerPage, int page)
+        {
+            List<int> pages = new List<int>();
+            int pagesCount = booksCount % resultsPerPage == 0 ? booksCount / resultsPerPage : (booksCount / resultsPerPage) + 1;
+            int listSize = 5;
+            int pageNum = page + (listSize / 2) < pagesCount ? page + (listSize / 2) : pagesCount;
+            while (pagesCount > 0 && listSize > 0 && pageNum > 0)
+            {
+                pages.Add(pageNum);
+                pageNum--;
+                pagesCount--;
+                listSize--;
+            }
+
+            pages.Reverse();
+
+            return pages.ToArray();
+        }
+
+        private List<BookListViewModel> Pagination(List<BookListViewModel> books, int resultsPerPage, int page)
+        {
+            var outputBooks = new List<BookListViewModel>();
+            int booksCount = books.Count;
+            int startIndex = 0;
+            int resultsCount = resultsPerPage;
+
+            if (books.Count >= resultsPerPage * (page - 1))
+            {
+                startIndex = resultsPerPage * (page - 1);
+            }
+
+            if (booksCount < resultsPerPage * page && booksCount >= resultsPerPage * (page - 1))
+            {
+                resultsCount = (booksCount % resultsPerPage);
+            }
+
+            if (booksCount < resultsPerPage * (page - 1))
+            {
+                resultsCount = 0;
+            }
+
+            if (resultsCount > 0)
+            {
+                outputBooks = books.GetRange(startIndex, resultsCount);
+            }
+
+            return outputBooks;
         }
 
         [HttpGet]
@@ -142,7 +202,5 @@ namespace Gamebook.Web.Controllers
 
             return this.RedirectToAction("Index");
         }
-
-        
     }
 }

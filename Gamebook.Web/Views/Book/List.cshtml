@@ -6,11 +6,37 @@
 }
 
 <h2>Book list</h2>
-
-<div class="row">
+<div class="row col-xs-12">
+    <div class="row col-xs-2">
+        Go to page: 
+    </div>
+    <div class="row col-xs-5">
+        @foreach (var page in @Model.Pages)
+        {
+            using (Html.BeginForm("List", "Book", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="col-xs-1">
+                    <input type="hidden" name="page" value=@page>
+                    <input type="hidden" id="resultsPerPage" name="resultsPerPage" value=@Model.ResultsPerPage>
+                    <input type="hidden" name="searchedTerm" value=@Model.SearchedTerm />
+                    @if (@page == @Model.CurrentPage)
+                    {
+                        <input class="btn-primary" type="submit" value="@page" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="@page" />
+                    }
+                </div>
+            }
+        }
+        }
+    </div>
+</div>
+<br />
+<div class="row col-xs-12">
     @foreach(var book in Model.Books)
     {
         @Html.Partial("_BookListPartial", book)
     }
 </div>
-

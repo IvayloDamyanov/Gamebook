@@ -8,8 +8,18 @@
             @using (Html.BeginForm("List", "Book", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
             {
                 <section id="bookSearch">
-                    <input type="text" class="search-query form-control" name = "searchTerm" placeholder="Leave empty for all" />
-                    <button class="btn btn-danger" type="submit">Search</button>
+                    <div class="row">
+                        <input type="text" class="search-query form-control" name="searchTerm" placeholder="Leave empty for all" />
+                    </div>
+                    <br />
+                    <div class="row">
+                        Results per page:
+                        <input type="number" class="search-query form-control" name="resultsPerPage" value="5" />
+                    </div>
+                    <br />
+                    <div class="row">
+                        <button class="btn btn-danger" type="submit">Search</button>
+                    </div>
                 </section>
             }
         </div>

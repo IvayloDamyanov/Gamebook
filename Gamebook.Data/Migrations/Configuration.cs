@@ -74,7 +74,7 @@ namespace Gamebook.Data.Migrations
         {
             if (!context.Books.Any())
             {
-                for (int i = 1; i < 6; i++)
+                for (int i = 1; i < 51; i++)
                 {
                     var book = new Book()
                     {
@@ -96,7 +96,7 @@ namespace Gamebook.Data.Migrations
         {
             if (!context.Pages.Any())
             {
-                for (int i = 1; i < 6; i++)
+                for (int i = 1; i < 51; i++)
                 {
                     var page = new Page()
                     {
