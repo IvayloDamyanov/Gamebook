@@ -23,6 +23,11 @@ namespace Gamebook.Services
             return this.booksRepo.All;
         }
 
+        public IQueryable<Book> GetAllAndDeleted()
+        {
+            return this.booksRepo.AllAndDeleted;
+        }
+
         public IQueryable<Book> FindAll(string searchTerm)
         {
             if (searchTerm == "" || searchTerm == null)
@@ -48,9 +53,9 @@ namespace Gamebook.Services
         public Book FindSingle(int catalogueNumber)
         {
             return this.booksRepo
-                .All
+                .AllAndDeleted
                 .Where(book => book.CatalogueNumber == catalogueNumber)
-                .First();
+                .FirstOrDefault();
         }
 
         public Task<int> Add(Book book)

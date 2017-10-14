@@ -8,6 +8,7 @@ namespace Gamebook.Services.Contracts
     public interface IBooksService : IService
     {
         IQueryable<Book> GetAll();
+        IQueryable<Book> GetAllAndDeleted();
         IQueryable<Book> FindAll(string query);
         Book FindSingle(int catalogueNumber);
         Task<int> Add(Book book);

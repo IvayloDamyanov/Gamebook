@@ -11,7 +11,8 @@
                 "columns": [
                     { "title": "UserName", "data": "UserName", "searchable": true },
                     { "title": "Email", "data": "Email", "searchable": true },
-                    { "title": "Lockout", "data": "Lockout Enabled", "searchable": true },
+                    { "title": "Lockout", "data": "Lockout", "searchable": true },
+                    { "title": "Phone", "data": "Phone", "searchable": true },
                     { "title": "Created", "data": "CreatedOn", "searchable": true },
                     { "title": "Modified", "data": "ModifiedOn", "searchable": true },
                     { "title": "isDeleted", "data": "isDeleted", "searchable": true },

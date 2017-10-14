@@ -59,6 +59,7 @@ namespace Gamebook.Web.Controllers
         {
             var books = this.booksService
                 .FindAll(searchTerm)
+                .Where(book => book.isDeleted != true)
                 .Select(book => new BookListViewModel()
                 {
                     CatalogueNumber = book.CatalogueNumber,

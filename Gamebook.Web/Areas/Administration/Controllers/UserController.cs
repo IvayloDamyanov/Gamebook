@@ -18,14 +18,14 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 {
     [RouteArea("Administration")]
     [Authorize(Roles = "Admin")]
-    public class BookController : Controller
+    public class UserController : Controller
     {
         private readonly IBooksService booksService;
         private readonly IPagesService pagesService;
         private readonly IPageConnectionsService pageConnectionsService;
         private readonly IUsersService usersService;
 
-        public BookController(
+        public UserController(
                             IBooksService booksService,
                             IPagesService pagesService,
                             IPageConnectionsService pageConnectionsService,
@@ -47,22 +47,21 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Authorize]
-        public ViewResult Edit(int id)
+        public ViewResult Edit(string id)
         {
-            Book book = this.booksService.FindSingle(id);
+            User user = this.usersService.GetAllAndDeleted().Where(u => u.Id == id).First();
 
-            BookFullViewModel viewModel = new BookFullViewModel()
+            UserFullViewModel viewModel = new UserFullViewModel()
             {
-                Id = book.Id,
-                CatalogueNumber = book.CatalogueNumber,
-                Title = book.Title,
-                Resume = book.Resume,
-                isDeleted = book.isDeleted,
-                DeletedOn = book.DeletedOn,
-                CreatedOn = book.CreatedOn,
-                ModifiedOn = book.ModifiedOn,
-                AuthorUsername = book.Author.UserName,
-                AuthorId = book.Author.Id
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Phone = user.PhoneNumber,
+                Lockout = user.LockoutEnabled,
+                isDeleted = user.isDeleted,
+                DeletedOn = user.DeletedOn,
+                CreatedOn = user.CreatedOn,
+                ModifiedOn = user.ModifiedOn
             };
 
             return View(viewModel);
@@ -70,61 +69,61 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Edit(BookFullViewModel model, string returnUrl)
+        public async Task<ActionResult> Edit(UserFullViewModel model, string returnUrl)
         {
             //if (!ModelState.IsValid)
             //{
             //    return View(model);
             //}
 
-            Book book = this.booksService.FindSingle(model.CatalogueNumber);
-            book.Title = model.Title;
-            book.CatalogueNumber = model.CatalogueNumber;
-            book.Resume = model.Resume;
-            book.ModifiedOn = DateTime.Now;
+            User user = this.usersService.FindSingle(model.UserName);
+            user.Email = model.Email;
+            user.PhoneNumber = model.Phone;
+            user.LockoutEnabled = model.Lockout;
+            user.ModifiedOn = DateTime.Now;
 
             if (model.isDeleted && model.DeletedOn == null)
             {
-                book.isDeleted = true;
-                book.DeletedOn = DateTime.Now;
+                user.isDeleted = true;
+                user.DeletedOn = DateTime.Now;
             }
             if (!model.isDeleted && model.DeletedOn != null)
             {
-                book.isDeleted = false;
-                book.DeletedOn = null;
+                user.isDeleted = false;
+                user.DeletedOn = null;
             }
 
-            var result = this.booksService.Update(book);
+            var result = this.usersService.Update(user);
             await result;
-            return this.RedirectToAction("List", "Book", new { result = result });
+            return this.RedirectToAction("List", "User", new { result = result });
         }
 
         [Authorize]
         public ActionResult List(int result = 0)
         {
-            var model = new ResultViewModel()
+            var viewModel = new ResultViewModel()
             {
                 Result = result
             };
-            return View(model);
+            return View(viewModel);
         }
 
         [Authorize]
-        public ActionResult BookTable([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
+        public ActionResult UserTable([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
-            var query = booksService
+            var query = usersService
                 .GetAllAndDeleted()
-                .Select(book => new BookFullViewModel()
+                .Select(user => new UserFullViewModel()
                 {
-                    Id = book.Id,
-                    CatalogueNumber = book.CatalogueNumber,
-                    Title = book.Title,
-                    Resume = book.Resume,
-                    isDeleted = book.isDeleted,
-                    DeletedOn = book.DeletedOn,
-                    CreatedOn = book.CreatedOn,
-                    ModifiedOn = book.ModifiedOn,
-                    AuthorUsername = book.Author.UserName
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Phone = user.PhoneNumber,
+                    Lockout = user.LockoutEnabled,
+                    isDeleted = user.isDeleted,
+                    DeletedOn = user.DeletedOn,
+                    CreatedOn = user.CreatedOn,
+                    ModifiedOn = user.ModifiedOn
                 })
                 .ToList();
 
@@ -134,8 +133,8 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             if (requestModel.Search.Value != string.Empty)
             {
                 var value = requestModel.Search.Value.Trim();
-                query = query.Where(book => book.Title.Contains(value)
-                                        || book.Resume.Contains(value)) 
+                query = query.Where(user => user.UserName.Contains(value)
+                                        || user.Email.Contains(value)) 
                                          .ToList();
             }
 
@@ -151,22 +150,22 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 orderByString += (column.Data) + (column.SortDirection == Column.OrderDirection.Ascendant ? " asc" : " desc");
             }
 
-            query = query.OrderBy(orderByString == string.Empty ? "CatalogueNumber asc" : orderByString).ToList();
+            query = query.OrderBy(orderByString == string.Empty ? "UserName asc" : orderByString).ToList();
             
             // Paging
             query = query.Skip(requestModel.Start).Take(requestModel.Length).ToList();
 
-            var data = query.Select(book => new
+            var data = query.Select(user => new
             {
-                Id = book.Id,
-                Title = book.Title,
-                CatalogueNumber = "<a href=\"./edit/" + book.CatalogueNumber + "\">" + book.CatalogueNumber + "</a>",
-                Resume = book.Resume,
-                CreatedOn = string.Format("{0:dd/MMM/yyyy}", book.CreatedOn),
-                ModifiedOn = string.Format("{0:dd/MMM/yyyy}", book.ModifiedOn),
-                isDeleted = book.isDeleted,
-                DeletedOn = string.Format("{0:dd/MMM/yyyy}", book.DeletedOn),
-                AuthorUsername = book.AuthorUsername
+                Id = user.Id,
+                UserName = "<a href=\"./edit/" + user.Id + "\">" + user.UserName + "</a>",
+                Email = user.Email,
+                Phone = user.Phone,
+                Lockout = user.Lockout,
+                CreatedOn = string.Format("{0:dd/MMM/yyyy}", user.CreatedOn),
+                ModifiedOn = string.Format("{0:dd/MMM/yyyy}", user.ModifiedOn),
+                isDeleted = user.isDeleted,
+                DeletedOn = string.Format("{0:dd/MMM/yyyy}", user.DeletedOn)
             }).ToList();
 
             return Json(
@@ -178,44 +177,39 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         [Authorize]
         public ActionResult Create()
         {
-            var model = new BookCreateViewModel();
-            return View("_CreateBookPartial", model);
+            var model = new UserCreateViewModel();
+            return View("_CreateUserPartial", model);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create(BookCreateViewModel bookVM)
+        public async Task<ActionResult> Create(UserCreateViewModel userVM)
         {
             if (!ModelState.IsValid)
             {
-                return View("_CreateBookPartial", bookVM);
+                return View("_CreateUserPartial", userVM);
             }
 
 
             User author = usersService.FindSingle(this.User.Identity.Name);
             
-            Book book = new Book()
+            User user = new User()
             {
-                Id = Guid.NewGuid(),
-                Title = bookVM.UserName,
-                CatalogueNumber = bookVM.CatalogueNumber,
-                Resume = bookVM.Resume,
-                isDeleted = false,
-                DeletedOn = null,
-                CreatedOn = DateTime.Now,
-                ModifiedOn = DateTime.Now,
-                Author = author
+                UserName = userVM.UserName,
+                Email = userVM.Email,
+                EmailConfirmed = true,
+                CreatedOn = DateTime.Now
             };
 
             try
             {
-                var task = this.booksService.Add(book);
+                var task = this.usersService.Add(user);
                 await task;
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("", "Unable to add the Book");
-                return View("_CreateBookPartial", bookVM);
+                ModelState.AddModelError("", "Unable to add the User");
+                return View("_CreateUserPartial", userVM);
             }
 
             return Content("success");

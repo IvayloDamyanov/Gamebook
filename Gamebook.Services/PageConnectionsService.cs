@@ -28,6 +28,11 @@ namespace Gamebook.Services
             return this.pageConnectionsRepo.All;
         }
 
+        public IQueryable<PageConnection> GetAllAndDeleted()
+        {
+            return this.pageConnectionsRepo.All;
+        }
+
         public IQueryable<PageConnection> getChildPages(int bookCatalogueNumber, int parentPageNumber)
         {
             Book searchedBook = booksService.FindSingle(bookCatalogueNumber);

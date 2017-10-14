@@ -112,7 +112,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         public ActionResult PageTable([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest requestModel)
         {
             var query = pagesService
-                .GetAll()
+                .GetAllAndDeleted()
                 .Select(page => new PageFullViewModel()
                 {
                     Id = page.Id,
@@ -193,6 +193,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
 
             User author = usersService.FindSingle(this.User.Identity.Name);
+            Book book = booksService.FindSingle(pageVM.BookCatNum);
             
             Page page = new Page()
             {
@@ -204,6 +205,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 DeletedOn = null,
                 CreatedOn = DateTime.Now,
                 ModifiedOn = DateTime.Now,
+                Book = book,
                 Author = author
             };
 

@@ -27,6 +27,11 @@ namespace Gamebook.Services
             return this.pagesRepo.All;
         }
 
+        public IQueryable<Page> GetAllAndDeleted()
+        {
+            return this.pagesRepo.AllAndDeleted;
+        }
+
         public Page Find(int bookCatalogueNumber, int searchedPageNum)
         {
             Book searchedBook = this.booksService.FindSingle(bookCatalogueNumber);

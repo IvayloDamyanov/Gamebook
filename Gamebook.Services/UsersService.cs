@@ -26,6 +26,11 @@ namespace Gamebook.Services
             return this.usersRepo.All;
         }
 
+        public IQueryable<User> GetAllAndDeleted()
+        {
+            return this.usersRepo.AllAndDeleted;
+        }
+
         public User FindSingle(string userName)
         {
             return this.usersRepo

@@ -230,9 +230,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
+    <Compile Include="Areas\Administration\Controllers\UserController.cs" />
     <Compile Include="Areas\Administration\Controllers\PageController.cs" />
     <Compile Include="Areas\Administration\Controllers\BookController.cs" />
     <Compile Include="Areas\Administration\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Administration\Models\UserCreateViewModel.cs" />
+    <Compile Include="Areas\Administration\Models\UserFullViewModel.cs" />
     <Compile Include="Areas\Administration\Models\PageCreateViewModel.cs" />
     <Compile Include="Areas\Administration\Models\BookCreateViewModel.cs" />
     <Compile Include="Areas\Administration\Models\PageFullViewModel.cs" />
@@ -429,7 +432,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\Administration\Views\web.config" />
-    <Content Include="Areas\Administration\Views\Book\Index.cshtml" />
     <Content Include="Areas\Administration\Views\Home\Index.cshtml" />
     <Content Include="Areas\Administration\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Administration\Views\Book\Edit.cshtml" />
@@ -442,6 +444,9 @@
     <Content Include="Areas\Administration\Views\Page\List.cshtml" />
     <Content Include="Areas\Administration\Views\Page\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\Shared\_CreatePagePartial.cshtml" />
+    <Content Include="Areas\Administration\Views\User\Edit.cshtml" />
+    <Content Include="Areas\Administration\Views\User\List.cshtml" />
+    <Content Include="Areas\Administration\Views\Shared\_CreateUserPartial.cshtml" />
     <None Include="Properties\PublishProfiles\GamebookWeb20171011093612 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />

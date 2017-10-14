@@ -9,6 +9,7 @@ namespace Gamebook.Services.Contracts
     {
         User FindSingle(string Id);
         IQueryable<User> GetAll();
+        IQueryable<User> GetAllAndDeleted();
         Task<int> Add(User user);
         Task<int> Delete(User user);
         Task<int> Update(User user);
