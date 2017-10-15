@@ -55,5 +55,18 @@ namespace Gamebook.Web.Tests.Controllers
             // Assert
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void Stats()
+        {
+            // Arrange
+            HomeController controller = new HomeController(bookServiceMock.Object, pagesServiceMock.Object);
+
+            // Act
+            PartialViewResult result = controller.Stats() as PartialViewResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
     }
 }

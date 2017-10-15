@@ -37,14 +37,6 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             this.usersService = usersService;
         }
 
-        //// GET: \book - main page + search
-        //[HttpGet]
-        //[Authorize]
-        //public ViewResult Index()
-        //{
-        //    return View();
-        //}
-
         [HttpGet]
         [Authorize]
         public ViewResult Edit(int id)
@@ -72,11 +64,6 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         [Authorize]
         public async Task<ActionResult> Edit(BookFullViewModel model, string returnUrl)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(model);
-            //}
-
             Book book = this.booksService.FindSingle(model.CatalogueNumber);
             book.Title = model.Title;
             book.CatalogueNumber = model.CatalogueNumber;
@@ -100,7 +87,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         }
 
         [Authorize]
-        public ActionResult List(int result = 0)
+        public ViewResult List(int result = 0)
         {
             var model = new ResultViewModel()
             {
@@ -176,7 +163,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult Create()
+        public ViewResult Create()
         {
             var model = new BookCreateViewModel();
             return View("_CreateBookPartial", model);
@@ -186,18 +173,12 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         [Authorize]
         public async Task<ActionResult> Create(BookCreateViewModel bookVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("_CreateBookPartial", bookVM);
-            }
-
-
             User author = usersService.FindSingle(this.User.Identity.Name);
             
             Book book = new Book()
             {
                 Id = Guid.NewGuid(),
-                Title = bookVM.UserName,
+                Title = bookVM.Title,
                 CatalogueNumber = bookVM.CatalogueNumber,
                 Resume = bookVM.Resume,
                 isDeleted = false,
@@ -206,6 +187,9 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 ModifiedOn = DateTime.Now,
                 Author = author
             };
+
+            //var task = this.booksService.Add(book);
+            //await task;
 
             try
             {

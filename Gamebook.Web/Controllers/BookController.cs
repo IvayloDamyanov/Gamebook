@@ -70,9 +70,10 @@ namespace Gamebook.Web.Controllers
 
             page = page > 0 ? page : 1;
 
-            var outputBooks = Pagination(books, resultsPerPage, page);
+            var booksRange = booksService.Pagination(books.Count, resultsPerPage, page);
+            var outputBooks = books.GetRange(booksRange.Item1, booksRange.Item2);
 
-            int[] pagesNav = PagesNav(books.Count, resultsPerPage, page);
+            int[] pagesNav = booksService.PagesNav(books.Count, resultsPerPage, page);
 
             //With Automapper (inject IMapper in constructor)
             //var books = this.booksService
@@ -92,54 +93,64 @@ namespace Gamebook.Web.Controllers
             return View(viewModel);
         }
 
-        private int[] PagesNav(int booksCount, int resultsPerPage, int page)
-        {
-            List<int> pages = new List<int>();
-            int pagesCount = booksCount % resultsPerPage == 0 ? booksCount / resultsPerPage : (booksCount / resultsPerPage) + 1;
-            int listSize = 5;
-            int pageNum = page + (listSize / 2) < pagesCount ? page + (listSize / 2) : pagesCount;
-            while (pagesCount > 0 && listSize > 0 && pageNum > 0)
-            {
-                pages.Add(pageNum);
-                pageNum--;
-                pagesCount--;
-                listSize--;
-            }
+        //private int[] PagesNav(int booksCount, int resultsPerPage, int page)
+        //{
+        //    List<int> pages = new List<int>();
+        //    if (booksCount == 0)
+        //    {
+        //        return pages.ToArray();
+        //    }
 
-            pages.Reverse();
+        //    int pagesCount = booksCount % resultsPerPage == 0 ? booksCount / resultsPerPage : (booksCount / resultsPerPage) + 1;
+        //    int listSize = 5;
+        //    int pageNum = page + (listSize / 2) < pagesCount ? page + (listSize / 2) : pagesCount;
+        //    while (pagesCount > 0 && listSize > 0 && pageNum > 0)
+        //    {
+        //        pages.Add(pageNum);
+        //        pageNum--;
+        //        pagesCount--;
+        //        listSize--;
+        //    }
 
-            return pages.ToArray();
-        }
+        //    pages.Reverse();
 
-        private List<BookListViewModel> Pagination(List<BookListViewModel> books, int resultsPerPage, int page)
-        {
-            var outputBooks = new List<BookListViewModel>();
-            int booksCount = books.Count;
-            int startIndex = 0;
-            int resultsCount = resultsPerPage;
+        //    return pages.ToArray();
+        //}
 
-            if (books.Count >= resultsPerPage * (page - 1))
-            {
-                startIndex = resultsPerPage * (page - 1);
-            }
+        //private List<BookListViewModel> Pagination(List<BookListViewModel> books, int resultsPerPage, int page)
+        //{
+        //    var outputBooks = new List<BookListViewModel>();
+        //    int booksCount = books.Count;
+        //    int startIndex = 0;
+        //    int resultsCount = resultsPerPage;
 
-            if (booksCount < resultsPerPage * page && booksCount >= resultsPerPage * (page - 1))
-            {
-                resultsCount = (booksCount % resultsPerPage);
-            }
+        //    if (booksCount == 0)
+        //    {
+        //        return books;
+        //    }
 
-            if (booksCount < resultsPerPage * (page - 1))
-            {
-                resultsCount = 0;
-            }
+        //    if (books.Count >= resultsPerPage * (page - 1))
+        //    {
+        //        startIndex = resultsPerPage * (page - 1);
+        //    }
 
-            if (resultsCount > 0)
-            {
-                outputBooks = books.GetRange(startIndex, resultsCount);
-            }
+        //    if (booksCount < resultsPerPage * page && booksCount >= resultsPerPage * (page - 1))
+        //    {
+        //        resultsCount = (booksCount % resultsPerPage);
+        //    }
 
-            return outputBooks;
-        }
+        //    if (booksCount < resultsPerPage * (page - 1))
+        //    {
+        //        resultsCount = 0;
+        //    }
+
+        //    if (resultsCount > 0)
+        //    {
+        //        outputBooks = books.GetRange(startIndex, resultsCount);
+        //    }
+
+        //    return outputBooks;
+        //}
 
         [HttpGet]
         public ViewResult Read(int book, int page)
@@ -164,44 +175,6 @@ namespace Gamebook.Web.Controllers
             };
 
             return View(viewModel);
-        }
-        
-        [HttpGet]
-        [Authorize]
-        public ViewResult Edit(string query)
-        {
-            //var books = this.booksService
-            //    .FindAll(query)
-            //    .Select(book => new BookViewModel()
-            //    {
-            //        Id = book.Id,
-            //        CatalogueNumber = book.CatalogueNumber,
-            //        Title = book.Title,
-            //        Resume = book.Resume,
-            //        CreatedOn = book.CreatedOn.Value,
-            //        ModifiedOn = book.ModifiedOn,
-            //        isDeleted = book.isDeleted,
-            //        DeletedOn = book.DeletedOn
-            //    })
-            //    .ToList();
-
-            //var viewModel = new ListViewModel()
-            //{
-            //    Books = books
-            //};
-
-            //return View(viewModel);
-
-            return View();
-        }
-
-        [HttpPost]
-        [Authorize]
-        public ActionResult Edit(BookViewModel model)
-        {
-            //this.booksService.Update();
-
-            return this.RedirectToAction("Index");
         }
     }
 }

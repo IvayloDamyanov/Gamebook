@@ -2,6 +2,8 @@
 using Gamebook.Data.Repositories.Contracts;
 using Gamebook.Data.SaveContext.Contracts;
 using Gamebook.Services.Contracts;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -75,5 +77,64 @@ namespace Gamebook.Services
             this.booksRepo.Update(book);
             return this.context.CommitAsync();
         }
+
+        public int[] PagesNav(int booksCount, int resultsPerPage, int page)
+        {
+            List<int> pages = new List<int>();
+            if (booksCount == 0)
+            {
+                return pages.ToArray();
+            }
+
+            int pagesCount = booksCount % resultsPerPage == 0 ? booksCount / resultsPerPage : (booksCount / resultsPerPage) + 1;
+            int listSize = 5;
+            int pageNum = page + (listSize / 2) < pagesCount ? page + (listSize / 2) : pagesCount;
+            while (pagesCount > 0 && listSize > 0 && pageNum > 0)
+            {
+                pages.Add(pageNum);
+                pageNum--;
+                pagesCount--;
+                listSize--;
+            }
+
+            pages.Reverse();
+
+            return pages.ToArray();
+        }
+
+        public Tuple<int, int> Pagination(int booksCount, int resultsPerPage, int page)
+        {
+            Tuple<int, int> output = new Tuple<int, int>(0, 0);
+            int startIndex = 0;
+            int resultsCount = resultsPerPage;
+
+            if (booksCount == 0)
+            {
+                return output;
+            }
+
+            if (booksCount >= resultsPerPage * (page - 1))
+            {
+                startIndex = resultsPerPage * (page - 1);
+            }
+
+            if (booksCount < resultsPerPage * page && booksCount >= resultsPerPage * (page - 1))
+            {
+                resultsCount = (booksCount % resultsPerPage);
+            }
+
+            if (booksCount < resultsPerPage * (page - 1))
+            {
+                resultsCount = 0;
+            }
+
+            if (resultsCount > 0)
+            {
+                output = new Tuple<int, int>(startIndex, resultsCount);
+            }
+
+            return output;
+        }
+
     }
 }

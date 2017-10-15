@@ -7,6 +7,8 @@ namespace Gamebook.Web.Areas.Administration.Models
 {
     public class BookCreateViewModel
     {
+        public string Title { get; set; }
+
         public int CatalogueNumber { get; set; }
 
         public string UserName { get; set; }
