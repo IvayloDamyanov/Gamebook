@@ -2,7 +2,7 @@
 using Gamebook.Data.Model;
 using Gamebook.Services.Contracts;
 using Gamebook.Web.Areas.Administration.Models;
-using Gamebook.Web.Infrastructure;
+//using Gamebook.Web.Infrastructure;
 using Gamebook.Web.Models.Book;
 using Gamebook.Web.Models.Page;
 using System;
@@ -62,7 +62,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Edit(BookFullViewModel model, string returnUrl)
+        public ActionResult Edit(BookFullViewModel model, string returnUrl)
         {
             Book book = this.booksService.FindSingle(model.CatalogueNumber);
             book.Title = model.Title;
@@ -82,7 +82,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             }
 
             var result = this.booksService.Update(book);
-            await result;
+
             return this.RedirectToAction("List", "Book", new { result = result });
         }
 
@@ -171,7 +171,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create(BookCreateViewModel bookVM)
+        public ActionResult Create(BookCreateViewModel bookVM)
         {
             User author = usersService.FindSingle(this.User.Identity.Name);
             
@@ -187,14 +187,10 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 ModifiedOn = DateTime.Now,
                 Author = author
             };
-
-            //var task = this.booksService.Add(book);
-            //await task;
-
+            
             try
             {
                 var task = this.booksService.Add(book);
-                await task;
             }
             catch (Exception e)
             {

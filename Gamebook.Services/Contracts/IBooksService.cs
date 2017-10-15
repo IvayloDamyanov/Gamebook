@@ -14,8 +14,8 @@ namespace Gamebook.Services.Contracts
         Book FindSingle(int catalogueNumber);
         int[] PagesNav(int booksCount, int resultsPerPage, int page);
         Tuple<int, int> Pagination(int booksCount, int resultsPerPage, int page);
-        Task<int> Add(Book book);
-        Task<int> Delete(Book book);
-        Task<int> Update(Book book);
+        int Add(Book book);
+        int Delete(Book book);
+        int Update(Book book);
     }
 }

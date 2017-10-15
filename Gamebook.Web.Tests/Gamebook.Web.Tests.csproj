@@ -45,6 +45,7 @@
       <HintPath>..\packages\JetBrains.dotMemoryUnit.2.4.20170830.172630\lib\dotMemory.Unit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -99,11 +100,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Administration\Controllers\AdminUserControllerTest.cs" />
+    <Compile Include="Areas\Administration\Controllers\AdminPageControllerTest.cs" />
     <Compile Include="Areas\Administration\Controllers\AdminHomeControllerTest.cs" />
     <Compile Include="Areas\Administration\Controllers\AdminBookControllerTest.cs" />
     <Compile Include="Controllers\BookControllerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\PageConnectionService.cs" />
+    <Compile Include="Services\PageService.cs" />
+    <Compile Include="Services\BookService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -115,6 +122,10 @@
     <ProjectReference Include="..\Gamebook.Data.Model\Gamebook.Data.Model.csproj">
       <Project>{45D33247-81FB-4610-B4E1-D51F2D5524EF}</Project>
       <Name>Gamebook.Data.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gamebook.Data\Gamebook.Data.csproj">
+      <Project>{E01CF319-E2BE-44BF-B235-868856D05A00}</Project>
+      <Name>Gamebook.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gamebook.Services\Gamebook.Services.csproj">
       <Project>{B7E63557-7543-490A-A4A7-32125443FD1D}</Project>

@@ -2,7 +2,7 @@
 using Gamebook.Data.Model;
 using Gamebook.Services.Contracts;
 using Gamebook.Web.Areas.Administration.Models;
-using Gamebook.Web.Infrastructure;
+//using Gamebook.Web.Infrastructure;
 using Gamebook.Web.Models.Book;
 using Gamebook.Web.Models.Page;
 using System;
@@ -70,7 +70,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Edit(PageFullViewModel model, string returnUrl)
+        public ActionResult Edit(PageFullViewModel model, string returnUrl)
         {
             //if (!ModelState.IsValid)
             //{
@@ -94,12 +94,11 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             }
 
             var result = this.pagesService.Update(page);
-            await result;
             return this.RedirectToAction("List", "Page", new { result = result });
         }
 
         [Authorize]
-        public ActionResult List(int result = 0)
+        public ViewResult List(int result = 0)
         {
             var model = new ResultViewModel()
             {
@@ -176,7 +175,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpGet]
         [Authorize]
-        public ActionResult Create()
+        public ViewResult Create()
         {
             var model = new PageCreateViewModel();
             return View("_CreatePagePartial", model);
@@ -184,7 +183,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create(PageCreateViewModel pageVM)
+        public ActionResult Create(PageCreateViewModel pageVM)
         {
             if (!ModelState.IsValid)
             {
@@ -198,7 +197,6 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             Page page = new Page()
             {
                 Id = Guid.NewGuid(),
-                //Book.CatalogueNumber = pageVM.BookCatNum,
                 Number = pageVM.Number,
                 Text = pageVM.Text,
                 isDeleted = false,
@@ -212,7 +210,6 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             try
             {
                 var task = this.pagesService.Add(page);
-                await task;
             }
             catch (Exception e)
             {

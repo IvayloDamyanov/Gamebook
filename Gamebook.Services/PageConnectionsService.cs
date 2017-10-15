@@ -33,7 +33,7 @@ namespace Gamebook.Services
             return this.pageConnectionsRepo.All;
         }
 
-        public IQueryable<PageConnection> getChildPages(int bookCatalogueNumber, int parentPageNumber)
+        public IQueryable<PageConnection> GetChildPages(int bookCatalogueNumber, int parentPageNumber)
         {
             Book searchedBook = booksService.FindSingle(bookCatalogueNumber);
 
@@ -44,22 +44,22 @@ namespace Gamebook.Services
                     && pageConnection.ParentPageNumber == parentPageNumber);
         }
 
-        public Task<int> Add(PageConnection pageConnection)
+        public int Add(PageConnection pageConnection)
         {
             this.pageConnectionsRepo.Add(pageConnection);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
-        public Task<int> Delete(PageConnection pageConnection)
+        public int Delete(PageConnection pageConnection)
         {
             this.pageConnectionsRepo.Delete(pageConnection);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
-        public Task<int> Update(PageConnection pageConnection)
+        public int Update(PageConnection pageConnection)
         {
             this.pageConnectionsRepo.Update(pageConnection);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
     }
 }

@@ -34,27 +34,27 @@ namespace Gamebook.Services
         public User FindSingle(string userName)
         {
             return this.usersRepo
-                .All
+                .AllAndDeleted
                 .Where(user => user.UserName == userName)
                 .First();
         }
 
-        public Task<int> Add(User user)
+        public int Add(User user)
         {
             this.usersRepo.Add(user);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
-        public Task<int> Delete(User user)
+        public int Delete(User user)
         {
             this.usersRepo.Delete(user);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
-        public Task<int> Update(User user)
+        public int Update(User user)
         {
             this.usersRepo.Update(user);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
     }
 }

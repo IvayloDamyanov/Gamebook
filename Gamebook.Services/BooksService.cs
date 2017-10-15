@@ -32,18 +32,21 @@ namespace Gamebook.Services
 
         public IQueryable<Book> FindAll(string searchTerm)
         {
-            if (searchTerm == "" || searchTerm == null)
+            if (searchTerm == string.Empty || searchTerm == null)
             {
                 return this.GetAll();
             }
             else
             {
-                int bookCatNum = -1;
+                int bookCatNum;
                 try
                 {
                     bookCatNum = int.Parse(searchTerm);
                 }
-                catch { }
+                catch
+                {
+                    bookCatNum = -1;
+                }
                 return this.booksRepo
                     .All
                     .Where(book =>
@@ -60,22 +63,22 @@ namespace Gamebook.Services
                 .FirstOrDefault();
         }
 
-        public Task<int> Add(Book book)
+        public int Add(Book book)
         {
             this.booksRepo.Add(book);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
-        public Task<int> Delete(Book book)
+        public int Delete(Book book)
         {
             this.booksRepo.Delete(book);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
-        public Task<int> Update(Book book)
+        public int Update(Book book)
         {
             this.booksRepo.Update(book);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
         public int[] PagesNav(int booksCount, int resultsPerPage, int page)

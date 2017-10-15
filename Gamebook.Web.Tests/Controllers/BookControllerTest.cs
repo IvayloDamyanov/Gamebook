@@ -78,7 +78,7 @@ namespace Gamebook.Web.Tests.Controllers
 
             // Act
             pagesServiceMock.Setup(x => x.Find(book, page)).Returns(new Page() { Book = new Book() });
-            pageConnectionsServiceMock.Setup(x => x.getChildPages(book, page)).Returns(list.AsQueryable);
+            pageConnectionsServiceMock.Setup(x => x.GetChildPages(book, page)).Returns(list.AsQueryable);
             ViewResult result = controller.Read(book, page) as ViewResult;
 
             // Assert

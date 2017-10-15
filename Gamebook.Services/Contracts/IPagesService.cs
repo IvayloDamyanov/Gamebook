@@ -9,8 +9,8 @@ namespace Gamebook.Services.Contracts
         IQueryable<Page> GetAll();
         IQueryable<Page> GetAllAndDeleted();
         Page Find(int bookCatalogueNumber, int searchedPageNum);
-        Task<int> Add(Page page);
-        Task<int> Delete(Page page);
-        Task<int> Update(Page page);
+        int Add(Page page);
+        int Delete(Page page);
+        int Update(Page page);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Gamebook.Data.Model;
 using Gamebook.Services.Contracts;
-using Gamebook.Web.Infrastructure;
+//using Gamebook.Web.Infrastructure;
 using Gamebook.Web.Models.Book;
 using Gamebook.Web.Models.Page;
 using System;
@@ -158,7 +158,7 @@ namespace Gamebook.Web.Controllers
             Page targetPage = this.pagesService
                 .Find(book, page);
             var childPages = this.pageConnectionsService
-                .getChildPages(book, page)
+                .GetChildPages(book, page)
                 .Select(pageConnection => new PageConnectionViewModel()
                 {
                     Text = pageConnection.Text,

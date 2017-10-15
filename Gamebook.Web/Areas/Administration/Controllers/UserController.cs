@@ -2,7 +2,7 @@
 using Gamebook.Data.Model;
 using Gamebook.Services.Contracts;
 using Gamebook.Web.Areas.Administration.Models;
-using Gamebook.Web.Infrastructure;
+//using Gamebook.Web.Infrastructure;
 using Gamebook.Web.Models.Book;
 using Gamebook.Web.Models.Page;
 using System;
@@ -20,30 +20,12 @@ namespace Gamebook.Web.Areas.Administration.Controllers
     [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
-        private readonly IBooksService booksService;
-        private readonly IPagesService pagesService;
-        private readonly IPageConnectionsService pageConnectionsService;
         private readonly IUsersService usersService;
 
-        public UserController(
-                            IBooksService booksService,
-                            IPagesService pagesService,
-                            IPageConnectionsService pageConnectionsService,
-                            IUsersService usersService)
+        public UserController(IUsersService usersService)
         {
-            this.booksService = booksService;
-            this.pagesService = pagesService;
-            this.pageConnectionsService = pageConnectionsService;
             this.usersService = usersService;
         }
-
-        //// GET: \book - main page + search
-        //[HttpGet]
-        //[Authorize]
-        //public ViewResult Index()
-        //{
-        //    return View();
-        //}
 
         [HttpGet]
         [Authorize]
@@ -69,7 +51,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Edit(UserFullViewModel model, string returnUrl)
+        public ActionResult Edit(UserFullViewModel model, string returnUrl)
         {
             //if (!ModelState.IsValid)
             //{
@@ -94,7 +76,6 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             }
 
             var result = this.usersService.Update(user);
-            await result;
             return this.RedirectToAction("List", "User", new { result = result });
         }
 
@@ -183,16 +164,13 @@ namespace Gamebook.Web.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create(UserCreateViewModel userVM)
+        public ActionResult Create(UserCreateViewModel userVM)
         {
             if (!ModelState.IsValid)
             {
                 return View("_CreateUserPartial", userVM);
             }
 
-
-            User author = usersService.FindSingle(this.User.Identity.Name);
-            
             User user = new User()
             {
                 UserName = userVM.UserName,
@@ -204,7 +182,6 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             try
             {
                 var task = this.usersService.Add(user);
-                await task;
             }
             catch (Exception e)
             {

@@ -36,38 +36,38 @@ namespace Gamebook.Services
         {
             Book searchedBook = this.booksService.FindSingle(bookCatalogueNumber);
 
-            Page searchedPage = this.pagesRepo
+            var searchedPages = this.pagesRepo
                 .All
                 .Where(page =>
                     page.Book.Id == searchedBook.Id
-                    && page.Number == searchedPageNum)
-                .First();
-            if(searchedPage == null)
+                    && page.Number == searchedPageNum);
+
+            if(searchedPages.Count() == 0)
             {
                 return new Page();
             }
             else
             {
-                return searchedPage;
+                return searchedPages.First();
             }
         }
 
-        public Task<int> Add(Page page)
+        public int Add(Page page)
         {
             this.pagesRepo.Add(page);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
 
-        public Task<int> Delete(Page page)
+        public int Delete(Page page)
         {
             this.pagesRepo.Delete(page);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
         
-        public Task<int> Update(Page page)
+        public int Update(Page page)
         {
             this.pagesRepo.Update(page);
-            return this.context.CommitAsync();
+            return this.context.Commit();
         }
     }
 }

@@ -19,7 +19,7 @@ using System.Security.Principal;
 namespace Gamebook.Web.Tests.Controllers
 {
     [TestClass]
-    public class AdminBookControllerTest
+    public class AdminPageControllerTest
     {
         private Mock<IBooksService> booksServiceMock = new Mock<IBooksService>();
         private Mock<IPagesService> pagesServiceMock = new Mock<IPagesService>();
@@ -30,7 +30,7 @@ namespace Gamebook.Web.Tests.Controllers
         public void EditGet()
         {
             // Arrange
-            BookController controller = new BookController(
+            PageController controller = new PageController(
                 booksServiceMock.Object, 
                 pagesServiceMock.Object, 
                 pageConnectionsServiceMock.Object, 
@@ -38,8 +38,8 @@ namespace Gamebook.Web.Tests.Controllers
             );
 
             // Act
-            booksServiceMock.Setup(x => x.FindSingle(0)).Returns(new Book() { Author = new User()});
-            ViewResult result = controller.Edit(0) as ViewResult;
+            pagesServiceMock.Setup(x => x.Find(1, 1)).Returns(new Page() { Book = new Book(), Author = new User()});
+            ViewResult result = controller.Edit(1, 1) as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -49,18 +49,19 @@ namespace Gamebook.Web.Tests.Controllers
         public void EditPost()
         {
             // Arrange
-            BookController controller = new BookController(
+            PageController controller = new PageController(
                 booksServiceMock.Object,
                 pagesServiceMock.Object,
                 pageConnectionsServiceMock.Object,
                 usersServiceMock.Object
             );
-            var bookVM = new BookFullViewModel();
+            var pageVM = new PageFullViewModel() { BookCatNum = 1, Number = 1};
+            var page = new Page() { Book = new Book(), Author = new User() };
 
             // Act
-            booksServiceMock.Setup(x => x.FindSingle(0)).Returns(new Book() { Author = new User() });
-            booksServiceMock.Setup(x => x.Update(new Book())).Returns(1);
-            ActionResult result = controller.Edit(bookVM, "") as ActionResult;
+            pagesServiceMock.Setup(x => x.Find(1, 1)).Returns(page);
+            pagesServiceMock.Setup(x => x.Update(page)).Returns(1);
+            ActionResult result = controller.Edit(pageVM, "") as ActionResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -70,7 +71,7 @@ namespace Gamebook.Web.Tests.Controllers
         public void List()
         {
             // Arrange
-            BookController controller = new BookController(
+            PageController controller = new PageController(
                 booksServiceMock.Object,
                 pagesServiceMock.Object,
                 pageConnectionsServiceMock.Object,
@@ -85,23 +86,23 @@ namespace Gamebook.Web.Tests.Controllers
         }
 
         [TestMethod]
-        public void BookTable()
+        public void PageTable()
         {
             // Arrange
-            BookController controller = new BookController(
+            PageController controller = new PageController(
                 booksServiceMock.Object,
                 pagesServiceMock.Object,
                 pageConnectionsServiceMock.Object,
                 usersServiceMock.Object
             );
             Mock<IDataTablesRequest> dtRequestMock = new Mock<IDataTablesRequest>();
-            var list = new List<Book>() { new Book() { Author = new User() } };
+            var list = new List<Page>() { new Page() { Book = new Book(), Author = new User() } };
 
             // Act
             dtRequestMock.Setup(x => x.Search).Returns(new Search(string.Empty, false));
-            booksServiceMock.Setup(x => x.GetAllAndDeleted()).Returns(list.AsQueryable);
+            pagesServiceMock.Setup(x => x.GetAllAndDeleted()).Returns(list.AsQueryable);
             dtRequestMock.Setup(x => x.Columns).Returns(new ColumnCollection(new List<Column>() { new Column("", "", true, true, "", false) }));
-            ActionResult result = controller.BookTable(dtRequestMock.Object) as ActionResult;
+            ActionResult result = controller.PageTable(dtRequestMock.Object) as ActionResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -111,7 +112,7 @@ namespace Gamebook.Web.Tests.Controllers
         public void CreateGet()
         {
             // Arrange
-            BookController controller = new BookController(
+            PageController controller = new PageController(
                 booksServiceMock.Object,
                 pagesServiceMock.Object,
                 pageConnectionsServiceMock.Object,
@@ -137,7 +138,7 @@ namespace Gamebook.Web.Tests.Controllers
             var controllerContext = new Mock<ControllerContext>();
             controllerContext.Setup(t => t.HttpContext).Returns(fakeHttpContext.Object);
 
-            BookController controller = new BookController(
+            PageController controller = new PageController(
                 booksServiceMock.Object,
                 pagesServiceMock.Object,
                 pageConnectionsServiceMock.Object,
@@ -147,8 +148,9 @@ namespace Gamebook.Web.Tests.Controllers
 
             // Act
             usersServiceMock.Setup(x => x.FindSingle("User")).Returns(new User());
-            booksServiceMock.Setup(x => x.Add(new Book())).Returns(1);
-            var result = controller.Create(new BookCreateViewModel());
+            booksServiceMock.Setup(x => x.FindSingle(1)).Returns(new Book());
+            pagesServiceMock.Setup(x => x.Add(new Page())).Returns(1);
+            ActionResult result = controller.Create(new PageCreateViewModel() { BookCatNum = 1});
 
             // Assert
             Assert.IsNotNull(result);

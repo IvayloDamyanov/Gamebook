@@ -8,9 +8,9 @@ namespace Gamebook.Services.Contracts
     {
         IQueryable<PageConnection> GetAll();
         IQueryable<PageConnection> GetAllAndDeleted();
-        IQueryable<PageConnection> getChildPages(int bookCatalogueNumber, int parentPageNumber);
-        Task<int> Add(PageConnection pageConnection);
-        Task<int> Delete(PageConnection pageConnection);
-        Task<int> Update(PageConnection pageConnection);
+        IQueryable<PageConnection> GetChildPages(int bookCatalogueNumber, int parentPageNumber);
+        int Add(PageConnection pageConnection);
+        int Delete(PageConnection pageConnection);
+        int Update(PageConnection pageConnection);
     }
 }

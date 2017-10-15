@@ -1,4 +1,4 @@
-﻿using Gamebook.Web.Infrastructure;
+﻿//using Gamebook.Web.Infrastructure;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +7,7 @@ namespace Gamebook.Web.Models.Book
     using AutoMapper;
     using Gamebook.Data.Model;
 
-    public class BookViewModel : IMapFrom<Book>, IHaveCustomMappings
+    public class BookViewModel
     {
         public Guid Id { get; set; }
 
