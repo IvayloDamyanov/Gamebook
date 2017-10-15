@@ -30,5 +30,20 @@ namespace Gamebook.Web
             //var mapper = new AutoMapperConfig();
             //mapper.Execute(Assembly.GetExecutingAssembly());
         }
+
+        protected void Application_Error(object sender, EventArgs e) 
+        { 
+            Exception exception = Server.GetLastError(); 
+            Response.Clear(); 
+ 
+            HttpException httpException = exception as HttpException; 
+ 
+            if (httpException != null) 
+            { 
+                Response.Redirect("/Home/Error");
+                
+                Server.ClearError();
+            } 
+        } 
     }
 }

@@ -38,6 +38,11 @@ namespace Gamebook.Web.Controllers
             return View();
         }
 
+        public ViewResult Error()
+        {
+            return View();
+        }
+
         [OutputCache(Duration = 3600)]
         [ChildActionOnly]
         public PartialViewResult Stats()

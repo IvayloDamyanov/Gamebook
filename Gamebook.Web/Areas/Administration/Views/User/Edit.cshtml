@@ -11,8 +11,9 @@
         <input type="hidden" name="Id" value=@Model.Id />
     </div>*@
     <div class="edit-field">
-        <div>UserName: </div>
-        <div>@Html.EditorFor(m => m.UserName)</div>
+        <div>Username: </div>
+        <div>@Model.UserName</div>
+        <input type="hidden" name="UserName" value=@Model.UserName />
     </div>
     <div class="edit-field">
         <div>Email: </div>
