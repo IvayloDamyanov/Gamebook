@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gamebook.Web;
 using Gamebook.Web.Controllers;
 using Gamebook.Services.Contracts;
 using Moq;
 using Gamebook.Data.Model;
 using Gamebook.Web.Models.Book;
+using NUnit.Framework;
 
 namespace Gamebook.Web.Tests.Controllers
 {
-    [TestClass]
+    [TestFixture]
     public class BookControllerTest
     {
         private Mock<IBooksService> booksServiceMock = new Mock<IBooksService>();
         private Mock<IPagesService> pagesServiceMock = new Mock<IPagesService>();
         private Mock<IPageConnectionsService> pageConnectionsServiceMock = new Mock<IPageConnectionsService>();
 
-        [TestMethod]
+        [Test]
         public void Index()
         {
             // Arrange
@@ -33,7 +33,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void Detailed()
         {
             // Arrange
@@ -49,7 +49,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void List()
         {
             // Arrange
@@ -67,7 +67,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void Read()
         {
             // Arrange

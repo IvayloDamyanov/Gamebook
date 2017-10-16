@@ -89,6 +89,7 @@ namespace Gamebook.Services
                 return pages.ToArray();
             }
 
+            resultsPerPage = resultsPerPage != 0 ? resultsPerPage : 1;
             int pagesCount = booksCount % resultsPerPage == 0 ? booksCount / resultsPerPage : (booksCount / resultsPerPage) + 1;
             int listSize = 5;
             int pageNum = page + (listSize / 2) < pagesCount ? page + (listSize / 2) : pagesCount;
@@ -124,11 +125,6 @@ namespace Gamebook.Services
             if (booksCount < resultsPerPage * page && booksCount >= resultsPerPage * (page - 1))
             {
                 resultsCount = (booksCount % resultsPerPage);
-            }
-
-            if (booksCount < resultsPerPage * (page - 1))
-            {
-                resultsCount = 0;
             }
 
             if (resultsCount > 0)

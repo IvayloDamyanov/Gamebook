@@ -166,10 +166,10 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         [Authorize]
         public ActionResult Create(UserCreateViewModel userVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("_CreateUserPartial", userVM);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View("_CreateUserPartial", userVM);
+            //}
 
             User user = new User()
             {
@@ -178,7 +178,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 EmailConfirmed = true,
                 CreatedOn = DateTime.Now
             };
-
+            
             try
             {
                 var task = this.usersService.Add(user);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gamebook.Web;
 using Gamebook.Web.Areas.Administration.Controllers;
 using Gamebook.Services.Contracts;
@@ -15,15 +14,16 @@ using System.Threading.Tasks;
 using DataTables.Mvc;
 using System.Web;
 using System.Security.Principal;
+using NUnit.Framework;
 
-namespace Gamebook.Web.Tests.Controllers
+namespace Gamebook.Web.Tests.Areas.Administration.Controllers
 {
-    [TestClass]
+    [TestFixture]
     public class AdminUserControllerTest
     {
         private Mock<IUsersService> usersServiceMock = new Mock<IUsersService>();
 
-        [TestMethod]
+        [Test]
         public void EditGet()
         {
             // Arrange
@@ -37,7 +37,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void EditPost()
         {
             // Arrange
@@ -52,7 +52,37 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
+        public void EditPostShould_SetIsDeletedWhenRequired()
+        {
+            // Arrange
+            UserController controller = new UserController(usersServiceMock.Object);
+            var user = new UserFullViewModel() { UserName = "user", isDeleted = true, DeletedOn = null };
+
+            // Act
+            usersServiceMock.Setup(x => x.FindSingle("user")).Returns(new User());
+            ActionResult result = controller.Edit(user, "") as ActionResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void EditPostShould_RemovesIsDeletedWhenRequired()
+        {
+            // Arrange
+            UserController controller = new UserController(usersServiceMock.Object);
+            var user = new UserFullViewModel() { UserName = "user", isDeleted = false, DeletedOn = DateTime.Now };
+
+            // Act
+            usersServiceMock.Setup(x => x.FindSingle("user")).Returns(new User());
+            ActionResult result = controller.Edit(user, "") as ActionResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
         public void List()
         {
             // Arrange
@@ -65,7 +95,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void UserTable()
         {
             // Arrange
@@ -83,7 +113,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void CreateGet()
         {
             // Arrange
@@ -96,23 +126,27 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void CreatePost()
         {
             // Arrange
-            //var fakeHttpContext = new Mock<HttpContextBase>();
-            //var fakeIdentity = new GenericIdentity("User");
-            //var principal = new GenericPrincipal(fakeIdentity, null);
-
-            //fakeHttpContext.Setup(t => t.User).Returns(principal);
-            //var controllerContext = new Mock<ControllerContext>();
-            //controllerContext.Setup(t => t.HttpContext).Returns(fakeHttpContext.Object);
-
             UserController controller = new UserController(usersServiceMock.Object);
-            //controller.ControllerContext = controllerContext.Object;
 
             // Act
             var result = controller.Create(new UserCreateViewModel());
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void CreatePostShould_ReturnViewIfUserServiceThrows()
+        {
+            UserController controller = new UserController(usersServiceMock.Object);
+
+            // Act
+            var result = controller.Create(new UserCreateViewModel());
+            usersServiceMock.Setup(x => x.Add(new User())).Throws(new Exception());
 
             // Assert
             Assert.IsNotNull(result);

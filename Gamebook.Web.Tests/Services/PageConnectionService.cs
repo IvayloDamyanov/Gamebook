@@ -1,7 +1,6 @@
 ﻿using Gamebook.Data.Model;
 using Gamebook.Data.Repositories.Contracts;
 using Gamebook.Data.SaveContext.Contracts;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -10,17 +9,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Gamebook.Services;
 using Gamebook.Services.Contracts;
+using NUnit.Framework;
 
 namespace Gamebook.Web.Tests.Services
 {
-    [TestClass]
+    [TestFixture]
     public class PageConnectionService
     {
         Mock<IEfRepository<PageConnection>> pageConnectionsRepoMock = new Mock<IEfRepository<PageConnection>>();
         Mock<IBooksService> bookServiceMock = new Mock<IBooksService>();
         Mock<ISaveContext> contextMock = new Mock<ISaveContext>();
         
-        [TestMethod]
+        [Test]
         public void GetAllShould_ReturnCorrectType()
         {
             // Arrang
@@ -32,10 +32,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pageConnectionsService.GetAll();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<PageConnection>));
+            Assert.IsInstanceOf(typeof(IQueryable<PageConnection>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void GetAllAndDeletedShould_ReturnCorrectType()
         {
             // Arrang
@@ -47,10 +47,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pageConnectionsService.GetAllAndDeleted();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<PageConnection>));
+            Assert.IsInstanceOf(typeof(IQueryable<PageConnection>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void GetChildPagesShould_ReturnCorrectType()
         {
             // Arrange
@@ -60,10 +60,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pageConnectionsService.GetChildPages(1, 1);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<PageConnection>));
+            Assert.IsInstanceOf(typeof(IQueryable<PageConnection>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void GetChildPagesShould_ReturnCorrectValue()
         {
             // Arrange
@@ -86,7 +86,7 @@ namespace Gamebook.Web.Tests.Services
             Assert.AreEqual(pageConnection2, result.First());
         }
 
-        [TestMethod]
+        [Test]
         public void AddShould_ReturnValue()
         {
             // Arrange
@@ -98,10 +98,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pageConnectionsService.Add(pageConnection);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteShould_ReturnValue()
         {
             // Arrange
@@ -113,10 +113,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pageConnectionsService.Delete(pageConnection);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateShould_ReturnValue()
         {
             // Arrange
@@ -128,7 +128,7 @@ namespace Gamebook.Web.Tests.Services
             var result = pageConnectionsService.Update(pageConnection);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
     }
 }

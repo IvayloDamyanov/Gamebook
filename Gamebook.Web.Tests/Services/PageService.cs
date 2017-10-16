@@ -1,7 +1,6 @@
 ﻿using Gamebook.Data.Model;
 using Gamebook.Data.Repositories.Contracts;
 using Gamebook.Data.SaveContext.Contracts;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -10,17 +9,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Gamebook.Services;
 using Gamebook.Services.Contracts;
+using NUnit.Framework;
 
 namespace Gamebook.Web.Tests.Services
 {
-    [TestClass]
+    [TestFixture]
     public class PageService
     {
         Mock<IEfRepository<Page>> pageRepoMock = new Mock<IEfRepository<Page>>();
         Mock<IBooksService> bookServiceMock = new Mock<IBooksService>();
         Mock<ISaveContext> contextMock = new Mock<ISaveContext>();
         
-        [TestMethod]
+        [Test]
         public void GetAllShould_ReturnCorrectType()
         {
             // Arrang
@@ -32,10 +32,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pagesService.GetAll();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<Page>));
+            Assert.IsInstanceOf(typeof(IQueryable<Page>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void GetAllAndDeletedShould_ReturnCorrectType()
         {
             // Arrang
@@ -47,10 +47,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pagesService.GetAllAndDeleted();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<Page>));
+            Assert.IsInstanceOf(typeof(IQueryable<Page>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void FindShould_ReturnCorrectType()
         {
             // Arrang
@@ -62,10 +62,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pagesService.Find(1, 1);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Page));
+            Assert.IsInstanceOf(typeof(Page), result);
         }
 
-        [TestMethod]
+        [Test]
         public void FindShould_ReturnCorrectValue()
         {
             // Arrange
@@ -88,7 +88,7 @@ namespace Gamebook.Web.Tests.Services
             Assert.AreEqual(page2, result);
         }
 
-        [TestMethod]
+        [Test]
         public void AddShould_ReturnValue()
         {
             // Arrange
@@ -100,10 +100,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pagesService.Add(page);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteShould_ReturnValue()
         {
             // Arrange
@@ -115,10 +115,10 @@ namespace Gamebook.Web.Tests.Services
             var result = pagesService.Delete(page);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateShould_ReturnValue()
         {
             // Arrange
@@ -130,7 +130,7 @@ namespace Gamebook.Web.Tests.Services
             var result = pagesService.Update(page);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
     }
 }

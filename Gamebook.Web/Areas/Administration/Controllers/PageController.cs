@@ -185,12 +185,6 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         [Authorize]
         public ActionResult Create(PageCreateViewModel pageVM)
         {
-            if (!ModelState.IsValid)
-            {
-                return View("_CreatePagePartial", pageVM);
-            }
-
-
             User author = usersService.FindSingle(this.User.Identity.Name);
             Book book = booksService.FindSingle(pageVM.BookCatNum);
             
@@ -206,7 +200,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
                 Book = book,
                 Author = author
             };
-
+            
             try
             {
                 var task = this.pagesService.Add(page);

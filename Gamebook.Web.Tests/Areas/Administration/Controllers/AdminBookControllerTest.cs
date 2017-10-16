@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gamebook.Web;
 using Gamebook.Web.Areas.Administration.Controllers;
 using Gamebook.Services.Contracts;
@@ -15,10 +14,11 @@ using System.Threading.Tasks;
 using DataTables.Mvc;
 using System.Web;
 using System.Security.Principal;
+using NUnit.Framework;
 
-namespace Gamebook.Web.Tests.Controllers
+namespace Gamebook.Web.Tests.Areas.Administration.Controllers
 {
-    [TestClass]
+    [TestFixture]
     public class AdminBookControllerTest
     {
         private Mock<IBooksService> booksServiceMock = new Mock<IBooksService>();
@@ -26,7 +26,7 @@ namespace Gamebook.Web.Tests.Controllers
         private Mock<IPageConnectionsService> pageConnectionsServiceMock = new Mock<IPageConnectionsService>();
         private Mock<IUsersService> usersServiceMock = new Mock<IUsersService>();
 
-        [TestMethod]
+        [Test]
         public void EditGet()
         {
             // Arrange
@@ -45,7 +45,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void EditPost()
         {
             // Arrange
@@ -66,7 +66,49 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
+        public void EditPostShould_SetIsDeletedWhenRequired()
+        {
+            // Arrange
+            BookController controller = new BookController(
+                booksServiceMock.Object,
+                pagesServiceMock.Object,
+                pageConnectionsServiceMock.Object,
+                usersServiceMock.Object
+            );
+            var bookVM = new BookFullViewModel() { isDeleted = true, DeletedOn = null };
+
+            // Act
+            booksServiceMock.Setup(x => x.FindSingle(0)).Returns(new Book() { Author = new User() });
+            booksServiceMock.Setup(x => x.Update(new Book())).Returns(1);
+            ActionResult result = controller.Edit(bookVM, "") as ActionResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void EditPostShould_RemovesIsDeletedWhenRequired()
+        {
+            // Arrange
+            BookController controller = new BookController(
+                booksServiceMock.Object,
+                pagesServiceMock.Object,
+                pageConnectionsServiceMock.Object,
+                usersServiceMock.Object
+            );
+            var bookVM = new BookFullViewModel() { isDeleted = false, DeletedOn = DateTime.Now };
+
+            // Act
+            booksServiceMock.Setup(x => x.FindSingle(0)).Returns(new Book() { Author = new User() });
+            booksServiceMock.Setup(x => x.Update(new Book())).Returns(1);
+            ActionResult result = controller.Edit(bookVM, "") as ActionResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
         public void List()
         {
             // Arrange
@@ -84,7 +126,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void BookTable()
         {
             // Arrange
@@ -107,7 +149,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void CreateGet()
         {
             // Arrange
@@ -125,7 +167,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void CreatePost()
         {
             // Arrange
@@ -148,6 +190,35 @@ namespace Gamebook.Web.Tests.Controllers
             // Act
             usersServiceMock.Setup(x => x.FindSingle("User")).Returns(new User());
             booksServiceMock.Setup(x => x.Add(new Book())).Returns(1);
+            var result = controller.Create(new BookCreateViewModel());
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void CreatePostShould_ReturnViewIfBookServiceThrows()
+        {
+            // Arrange
+            var fakeHttpContext = new Mock<HttpContextBase>();
+            var fakeIdentity = new GenericIdentity("User");
+            var principal = new GenericPrincipal(fakeIdentity, null);
+
+            fakeHttpContext.Setup(t => t.User).Returns(principal);
+            var controllerContext = new Mock<ControllerContext>();
+            controllerContext.Setup(t => t.HttpContext).Returns(fakeHttpContext.Object);
+
+            BookController controller = new BookController(
+                booksServiceMock.Object,
+                pagesServiceMock.Object,
+                pageConnectionsServiceMock.Object,
+                usersServiceMock.Object
+            );
+            controller.ControllerContext = controllerContext.Object;
+
+            // Act
+            usersServiceMock.Setup(x => x.FindSingle("User")).Returns(new User());
+            booksServiceMock.Setup(x => x.Add(new Book())).Throws(new Exception());
             var result = controller.Create(new BookCreateViewModel());
 
             // Assert

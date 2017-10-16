@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gamebook.Web;
 using Gamebook.Web.Controllers;
 using Gamebook.Services.Contracts;
 using Moq;
+using NUnit.Framework;
 
 namespace Gamebook.Web.Tests.Controllers
 {
-    [TestClass]
+    [TestFixture]
     public class HomeControllerTest
     {
         private Mock<IBooksService> bookServiceMock = new Mock<IBooksService>();
         private Mock<IPagesService> pagesServiceMock = new Mock<IPagesService>();
 
-        [TestMethod]
+        [Test]
         public void Index()
         {
             // Arrange
@@ -30,7 +30,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void About()
         {
             // Arrange
@@ -43,7 +43,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.AreEqual("Your application description page.", result.ViewBag.Message);
         }
 
-        [TestMethod]
+        [Test]
         public void Contact()
         {
             // Arrange
@@ -56,7 +56,7 @@ namespace Gamebook.Web.Tests.Controllers
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void Stats()
         {
             // Arrange
@@ -64,6 +64,19 @@ namespace Gamebook.Web.Tests.Controllers
 
             // Act
             PartialViewResult result = controller.Stats() as PartialViewResult;
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void Error()
+        {
+            // Arrange
+            HomeController controller = new HomeController(bookServiceMock.Object, pagesServiceMock.Object);
+
+            // Act
+            ViewResult result = controller.Index() as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);

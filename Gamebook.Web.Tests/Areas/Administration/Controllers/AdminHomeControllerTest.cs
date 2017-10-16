@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Gamebook.Web;
 using Gamebook.Web.Areas.Administration.Controllers;
 using Gamebook.Services.Contracts;
 using Moq;
+using NUnit.Framework;
 
-namespace Gamebook.Web.Tests.Controllers
+namespace Gamebook.Web.Tests.Areas.Administration.Controllers
 {
-    [TestClass]
+    [TestFixture]
     public class AdminHomeControllerTest
     {
-        [TestMethod]
+        [Test]
         public void Index()
         {
             // Arrange

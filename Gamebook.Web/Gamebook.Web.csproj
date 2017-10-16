@@ -447,7 +447,7 @@
     <Content Include="Areas\Administration\Views\User\Edit.cshtml" />
     <Content Include="Areas\Administration\Views\User\List.cshtml" />
     <Content Include="Areas\Administration\Views\Shared\_CreateUserPartial.cshtml" />
-    <None Include="Properties\PublishProfiles\GamebookWeb20171011093612 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\GamebookWeb-Ivo-Telerik - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />

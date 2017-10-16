@@ -1,7 +1,6 @@
 ﻿using Gamebook.Data.Model;
 using Gamebook.Data.Repositories.Contracts;
 using Gamebook.Data.SaveContext.Contracts;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -9,16 +8,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Gamebook.Services;
+using NUnit.Framework;
 
 namespace Gamebook.Web.Tests.Services
 {
-    [TestClass]
+    [TestFixture]
     public class BookService
     {
         Mock<IEfRepository<Book>> bookRepoMock = new Mock<IEfRepository<Book>>();
         Mock<ISaveContext> contextMock = new Mock<ISaveContext>();
         
-        [TestMethod]
+        [Test]
         public void GetAllShould_ReturnCorrectType()
         {
             // Arrang
@@ -30,10 +30,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.GetAll();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<Book>));
+            Assert.IsInstanceOf(typeof(IQueryable<Book>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void GetAllAndDeletedShould_ReturnCorrectType()
         {
             // Arrang
@@ -45,10 +45,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.GetAllAndDeleted();
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<Book>));
+            Assert.IsInstanceOf(typeof(IQueryable<Book>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void FindAllShould_ReturnCorrectType()
         {
             // Arrang
@@ -60,10 +60,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.FindAll("1");
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<Book>));
+            Assert.IsInstanceOf(typeof(IQueryable<Book>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void FindAllShould_ReturnCorrectTypeIfPassedEmptyString()
         {
             // Arrang
@@ -75,10 +75,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.FindAll(string.Empty);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<Book>));
+            Assert.IsInstanceOf(typeof(IQueryable<Book>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void FindAllShould_ReturnCorrectTypeIfPassedNullValue()
         {
             // Arrang
@@ -90,10 +90,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.FindAll(null);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(IQueryable<Book>));
+            Assert.IsInstanceOf(typeof(IQueryable<Book>), result);
         }
 
-        [TestMethod]
+        [Test]
         public void FindAllShould_ReturnCorrectResultIfPassedValueCanBeParsedToInt()
         {
             // Arrang
@@ -114,7 +114,7 @@ namespace Gamebook.Web.Tests.Services
             Assert.AreEqual(result, book2);
         }
 
-        [TestMethod]
+        [Test]
         public void FindAllShould_ReturnEmptyCollectionIfNothingIsFound()
         {
             // Arrang
@@ -135,7 +135,7 @@ namespace Gamebook.Web.Tests.Services
             Assert.AreEqual(0, result.Count());
         }
 
-        [TestMethod]
+        [Test]
         public void FindSingleShould_ReturnCorrectType()
         {
             // Arrange
@@ -149,10 +149,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.FindSingle(catNum);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(Book));
+            Assert.IsInstanceOf(typeof(Book), result);
         }
 
-        [TestMethod]
+        [Test]
         public void FindSingleShould_ReturnCorrectValue()
         {
             // Arrange
@@ -170,7 +170,7 @@ namespace Gamebook.Web.Tests.Services
             Assert.AreEqual(book1, result);
         }
 
-        [TestMethod]
+        [Test]
         public void AddShould_ReturnValue()
         {
             // Arrange
@@ -182,10 +182,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.Add(book);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteShould_ReturnValue()
         {
             // Arrange
@@ -197,10 +197,10 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.Delete(book);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
         }
 
-        [TestMethod]
+        [Test]
         public void UpdateShould_ReturnValue()
         {
             // Arrange
@@ -212,7 +212,109 @@ namespace Gamebook.Web.Tests.Services
             var result = bookService.Update(book);
 
             // Assert
-            Assert.IsInstanceOfType(result, typeof(int));
+            Assert.IsInstanceOf(typeof(int), result);
+        }
+
+        [Test]
+        public void PageNavShould_ReturnCorrectValueWhenPassedPositiveBookCount()
+        {
+            // Arrange
+            var bookService = new BooksService(bookRepoMock.Object, contextMock.Object);
+            int booksCount = 50;
+            int resultsPerPage = 5;
+            int page = 1;
+            int[] expectedResult = new int[] { 1, 2, 3 };
+
+            // Arrange
+            var result = bookService.PagesNav(booksCount, resultsPerPage, page);
+
+            // Assert
+            Assert.AreEqual(result[2], expectedResult[2]);
+        }
+
+        [Test]
+        public void PageNavShould_ReturnCorrectValueWhenPassedZeroBookCount()
+        {
+            // Arrange
+            var bookService = new BooksService(bookRepoMock.Object, contextMock.Object);
+            int booksCount = 0;
+            int resultsPerPage = 5;
+            int page = 1;
+            int[] expectedResult = new int[] { };
+
+            // Arrange
+            var result = bookService.PagesNav(booksCount, resultsPerPage, page);
+
+            // Assert
+            Assert.AreEqual(result.Length, expectedResult.Length);
+        }
+
+        [Test]
+        public void PagenationShould_ReturnCorrectValueWhenPassedPositiveBookCount()
+        {
+            // Arrange
+            var bookService = new BooksService(bookRepoMock.Object, contextMock.Object);
+            int booksCount = 50;
+            int resultsPerPage = 5;
+            int page = 1;
+            Tuple<int, int> expectedResult = new Tuple<int, int>(0, 5);
+
+            // Arrange
+            var result = bookService.Pagination(booksCount, resultsPerPage, page);
+
+            // Assert
+            Assert.AreEqual(result, expectedResult);
+        }
+
+        [Test]
+        public void PagenationShould_ReturnCorrectValueWhenPassedPositiveBookCount2()
+        {
+            // Arrange
+            var bookService = new BooksService(bookRepoMock.Object, contextMock.Object);
+            int booksCount = 50;
+            int resultsPerPage = 15;
+            int page = 4;
+            Tuple<int, int> expectedResult = new Tuple<int, int>(45, 5);
+
+            // Arrange
+            var result = bookService.Pagination(booksCount, resultsPerPage, page);
+
+            // Assert
+            Assert.AreEqual(result, expectedResult);
+        }
+
+        [Test]
+        public void PagenationShould_ReturnCorrectValueWhenPassedPositiveBookCount3()
+        {
+            // Arrange
+            var bookService = new BooksService(bookRepoMock.Object, contextMock.Object);
+            int booksCount = 50;
+            int resultsPerPage = 10;
+            int page = 2;
+            Tuple<int, int> expectedResult = new Tuple<int, int>(10, 10);
+
+            // Arrange
+            var result = bookService.Pagination(booksCount, resultsPerPage, page);
+
+            // Assert
+            Assert.AreEqual(result, expectedResult);
+        }
+
+        [Test]
+        public void PagenationShould_ReturnCorrectValueWhenPassedZeroBookCount()
+        {
+            // Arrange
+            var bookService = new BooksService(bookRepoMock.Object, contextMock.Object);
+            int booksCount = 0;
+            int resultsPerPage = 5;
+            int page = 1;
+            Tuple<int, int> expectedResult = new Tuple<int, int>(0, 0);
+
+            // Arrange
+            var result = bookService.Pagination(booksCount, resultsPerPage, page);
+
+            // Assert
+            Assert.AreEqual(result, expectedResult);
         }
     }
 }
