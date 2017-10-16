@@ -192,7 +192,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             {
                 var task = this.booksService.Add(book);
             }
-            catch (Exception e)
+            catch
             {
                 ModelState.AddModelError("", "Unable to add the Book");
                 return View("_CreateBookPartial", bookVM);

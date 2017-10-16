@@ -205,7 +205,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             {
                 var task = this.pagesService.Add(page);
             }
-            catch (Exception e)
+            catch
             {
                 ModelState.AddModelError("", "Unable to add the Page");
                 return View("_CreatePagePartial", pageVM);

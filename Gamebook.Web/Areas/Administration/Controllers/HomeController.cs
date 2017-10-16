@@ -12,16 +12,5 @@ namespace Gamebook.Web.Areas.Administration.Controllers
         {
             return View();
         }
-
-        //[HttpGet]
-        //public ActionResult Result(int result)
-        //{
-        //    var model = new ResultViewModel()
-        //    {
-        //        Result = result
-        //    };
-
-        //    return View(model);
-        //}
     }
 }

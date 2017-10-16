@@ -183,7 +183,7 @@ namespace Gamebook.Web.Areas.Administration.Controllers
             {
                 var task = this.usersService.Add(user);
             }
-            catch (Exception e)
+            catch
             {
                 ModelState.AddModelError("", "Unable to add the User");
                 return View("_CreateUserPartial", userVM);

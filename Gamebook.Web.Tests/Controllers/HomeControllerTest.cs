@@ -76,7 +76,7 @@ namespace Gamebook.Web.Tests.Controllers
             HomeController controller = new HomeController(bookServiceMock.Object, pagesServiceMock.Object);
 
             // Act
-            ViewResult result = controller.Index() as ViewResult;
+            ViewResult result = controller.Error() as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
